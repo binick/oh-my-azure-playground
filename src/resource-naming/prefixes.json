@@ -1,0 +1,1292 @@
+[
+  {
+    "module": "api-management-service-instance",
+    "category": "API Management",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "apim-",
+    "providerNamespace": "Microsoft.ApiManagement",
+    "resourceType": "service"
+  },
+  {
+    "module": "managed-identity",
+    "category": "Managed Identity",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "id-",
+    "providerNamespace": "Microsoft.ManagedIdentity",
+    "resourceType": "userAssignedIdentities"
+  },
+  {
+    "module": "management-group",
+    "category": "Management Group",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "mg-",
+    "providerNamespace": "Microsoft.Management",
+    "resourceType": "managementGroups"
+  },
+  {
+    "module": "policy-definition",
+    "category": "Policy Definition",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "policy-",
+    "providerNamespace": "Microsoft.Authorization",
+    "resourceType": "policyDefinitions"
+  },
+  {
+    "module": "resource-group",
+    "category": "Resource Group",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "rg-",
+    "providerNamespace": "Microsoft.Resources",
+    "resourceType": "resourceGroups"
+  },
+  {
+    "module": "application-gateway",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "agw-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "applicationGateways"
+  },
+  {
+    "module": "application-security-group",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "asg-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "applicationSecurityGroups"
+  },
+  {
+    "module": "bastion",
+    "category": "Bastion",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "bas-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "bastionHosts"
+  },
+  {
+    "module": "cdn-profile",
+    "category": "CDN",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "cdnp-",
+    "providerNamespace": "Microsoft.Cdn",
+    "resourceType": "profiles"
+  },
+  {
+    "module": "cdn-endpoint",
+    "category": "CDN",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "cdne-",
+    "providerNamespace": "Microsoft.Cdn",
+    "resourceType": "profiles/endpoints"
+  },
+  {
+    "module": "connections",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "con-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "connections"
+  },
+  {
+    "module": "dns",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "dnsz-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "dnsZones"
+  },
+  {
+    "module": "dns-zone",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "pdnsz-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "privateDnsZones"
+  },
+  {
+    "module": "firewall",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "afw-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "azureFirewalls"
+  },
+  {
+    "module": "firewall-policy",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "afwp-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "firewallPolicies"
+  },
+  {
+    "module": "express-route-circuit",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "erc-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "expressRouteCircuits"
+  },
+  {
+    "module": "front-door-instance",
+    "category": "Front Door",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "fd-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "frontDoors"
+  },
+  {
+    "module": "front-door-firewall-policy",
+    "category": "Front Door",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "fdfp-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "frontdoorWebApplicationFirewallPolicies"
+  },
+  {
+    "module": "load-balancer-internal",
+    "category": "Load Balancer",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "lbi-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "loadBalancers"
+  },
+  {
+    "module": "load-balancer-external",
+    "category": "Load Balancer",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "lbe-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "loadBalancers"
+  },
+  {
+    "module": "load-balancer-rule",
+    "category": "Load Balancer",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "rule-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "loadBalancers/inboundNatRules"
+  },
+  {
+    "module": "local-network-gateway",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "lgw-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "localNetworkGateways"
+  },
+  {
+    "module": "nat-gateway",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "ng",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "natGateways"
+  },
+  {
+    "module": "network-interface",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "nic-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "networkInterfaces"
+  },
+  {
+    "module": "network-security-group",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "nsg-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "networkSecurityGroups"
+  },
+  {
+    "module": "network-security-group-security-rules",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "nsgsr-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "networkSecurityGroups/securityRules"
+  },
+  {
+    "module": "network-watcher",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "nw-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "networkWatchers"
+  },
+  {
+    "module": "private-link",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "pl-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "privateLinkServices"
+  },
+  {
+    "module": "public-ip-address",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "pip-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "publicIPAddresses"
+  },
+  {
+    "module": "public-ip-address-prefix",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "ippre-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "publicIPPrefixes"
+  },
+  {
+    "module": "route-filter",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "rf-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "routeFilters"
+  },
+  {
+    "module": "route-table",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "rt-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "routeTables"
+  },
+  {
+    "module": "service-endpoint",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "se-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "serviceEndPointPolicies"
+  },
+  {
+    "module": "traffic-manager-profile",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "traf-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "trafficManagerProfiles"
+  },
+  {
+    "module": "user-definer-route",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "udr-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "routeTables/routes"
+  },
+  {
+    "module": "virtual-network",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "vnet-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "virtualNetworks"
+  },
+  {
+    "module": "virtual-network-peering",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "peer-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "virtualNetworks/virtualNetworkPeerings"
+  },
+  {
+    "module": "virtual-network-subnet",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "snet-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "virtualNetworks/subnets"
+  },
+  {
+    "module": "virtual-wan",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "vwan-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "virtualWans"
+  },
+  {
+    "module": "vpn-gateway",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "vpng-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "vpnGateways"
+  },
+  {
+    "module": "vpn-connection",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "vcn-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "vpnGateways/vpnConnections"
+  },
+  {
+    "module": "vpn-site",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "vst-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "vpnGateways/vpnSites"
+  },
+  {
+    "module": "virtual-network-gateway",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "vgw-",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "virtualNetworkGateways"
+  },
+  {
+    "module": "web-application-firewall-policy",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "waf",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "firewallPolicies"
+  },
+  {
+    "module": "web-application-firewall-policy-rule-group",
+    "category": "Network",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "wafrg",
+    "providerNamespace": "Microsoft.Network",
+    "resourceType": "firewallPolicies/ruleGroups"
+  },
+  {
+    "module": "app-service-environment",
+    "category": "App Service",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "ase-",
+    "providerNamespace": "Microsoft.Web",
+    "resourceType": "sites"
+  },
+  {
+    "module": "app-service-plan",
+    "category": "App Service",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "plan-",
+    "providerNamespace": "Microsoft.Web",
+    "resourceType": "serverFarms"
+  },
+  {
+    "module": "availability-set",
+    "category": "Compute",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "avail-",
+    "providerNamespace": "Microsoft.Compute",
+    "resourceType": "availabilitySets"
+  },
+  {
+    "module": "azure-arc-enabled-server",
+    "category": "Hybrid Compute",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "arcs-",
+    "providerNamespace": "Microsoft.HybridCompute",
+    "resourceType": "machines"
+  },
+  {
+    "module": "azure-arc-enabled-kubernetes-cluster",
+    "category": "Kubernetes",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "arck",
+    "providerNamespace": "Microsoft.Kubernetes",
+    "resourceType": "connectedClusters"
+  },
+  {
+    "module": "cloud-service",
+    "category": "Compute",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "cld-",
+    "providerNamespace": "Microsoft.Compute",
+    "resourceType": "cloudServices"
+  },
+  {
+    "module": "data-encryption-set",
+    "category": "Compute",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "des",
+    "providerNamespace": "Microsoft.Compute",
+    "resourceType": "diskEncryptionSets"
+  },
+  {
+    "module": "function-app",
+    "category": "Function Apps",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "func-",
+    "providerNamespace": "Microsoft.Web",
+    "resourceType": "sites"
+  },
+  {
+    "module": "gallery",
+    "category": "Compute",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "gal",
+    "providerNamespace": "Microsoft.Compute",
+    "resourceType": "galleries"
+  },
+  {
+    "module": "managed-disk-os",
+    "category": "Compute",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "osdisk",
+    "providerNamespace": "Microsoft.Compute",
+    "resourceType": "disks"
+  },
+  {
+    "module": "managed-disk-data",
+    "category": "Compute",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "disk",
+    "providerNamespace": "Microsoft.Compute",
+    "resourceType": "disks"
+  },
+  {
+    "module": "notification-hubs",
+    "category": "Notification Hubs",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "ntf-",
+    "providerNamespace": "Microsoft.NotificationHubs",
+    "resourceType": "namespaces/notificationHubs"
+  },
+  {
+    "module": "notification-hubs-namespace",
+    "category": "Notification Hubs",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "ntfns-",
+    "providerNamespace": "Microsoft.NotificationHubs",
+    "resourceType": "namespaces"
+  },
+  {
+    "module": "snapshot",
+    "category": "Compute",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "snap-",
+    "providerNamespace": "Microsoft.Compute",
+    "resourceType": "snapshots"
+  },
+  {
+    "module": "static-web-app",
+    "category": "App Service",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "stapp-",
+    "providerNamespace": "Microsoft.Web",
+    "resourceType": "staticSites"
+  },
+  {
+    "module": "virtual-machine",
+    "category": "Compute",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "vm",
+    "providerNamespace": "Microsoft.Compute",
+    "resourceType": "virtualMachines"
+  },
+  {
+    "module": "virtual-machine-scale-set",
+    "category": "Compute",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "vmss-",
+    "providerNamespace": "Microsoft.Compute",
+    "resourceType": "virtualMachineScaleSets"
+  },
+  {
+    "module": "web-app",
+    "category": "App Service",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "app-",
+    "providerNamespace": "Microsoft.Web",
+    "resourceType": "sites"
+  },
+  {
+    "module": "aks-cluster",
+    "category": "Kubernetes",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "aks-",
+    "providerNamespace": "Microsoft.ContainerService",
+    "resourceType": "managedClusters"
+  },
+  {
+    "module": "container-registry",
+    "category": "Container Registry",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "cr",
+    "providerNamespace": "Microsoft.ContainerService",
+    "resourceType": "registries"
+  },
+  {
+    "module": "container-instance",
+    "category": "Container Instance",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "ci",
+    "providerNamespace": "Microsoft.ContainerService",
+    "resourceType": "containerGroups"
+  },
+  {
+    "module": "service-fabric-cluster",
+    "category": "Service Fabric",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "sf-",
+    "providerNamespace": "Microsoft.ServiceFabric",
+    "resourceType": "clusters"
+  },
+  {
+    "module": "azure-cosmos-db-database",
+    "category": "Cosmos DB",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "cosmos-",
+    "providerNamespace": "Microsoft.DocumentDB",
+    "resourceType": "databaseAccounts/sqlDatabases"
+  },
+  {
+    "module": "azure-cache-for-redis-instance",
+    "category": "Cache",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "redis-",
+    "providerNamespace": "Microsoft.Cache",
+    "resourceType": "Redis"
+  },
+  {
+    "module": "azure-sql-database-server",
+    "category": "SQL",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "sql-",
+    "providerNamespace": "Microsoft.Sql",
+    "resourceType": "servers"
+  },
+  {
+    "module": "azure-sql-database",
+    "category": "SQL",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "sqldb-",
+    "providerNamespace": "Microsoft.Sql",
+    "resourceType": "servers/databases"
+  },
+  {
+    "module": "azure-synapse-analytics",
+    "category": "Synapse",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "syn",
+    "providerNamespace": "Microsoft.Synapse",
+    "resourceType": "workspaces"
+  },
+  {
+    "module": "azure-synapse-analytics-workspace",
+    "category": "Synapse",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "synw",
+    "providerNamespace": "Microsoft.Synapse",
+    "resourceType": "workspaces"
+  },
+  {
+    "module": "azure-synapse-analytics-sql-dedicated-pool",
+    "category": "Synapse",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "syndp",
+    "providerNamespace": "Microsoft.Synapse",
+    "resourceType": "workspaces/sqlPools"
+  },
+  {
+    "module": "azure-synapse-analytics-spark-pool",
+    "category": "Synapse",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "synsp",
+    "providerNamespace": "Microsoft.Synapse",
+    "resourceType": "workspaces/sqlPools"
+  },
+  {
+    "module": "mysql-database",
+    "category": "SQL",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "mysql-",
+    "providerNamespace": "Microsoft.DBforMySQL",
+    "resourceType": "servers"
+  },
+  {
+    "module": "postgresql-database",
+    "category": "SQL",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "psql-",
+    "providerNamespace": "Microsoft.DBforPostgreSQL",
+    "resourceType": "servers"
+  },
+  {
+    "module": "sql-server-stretch-database",
+    "category": "SQL",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "sqlstrdb-",
+    "providerNamespace": "Microsoft.Sql",
+    "resourceType": "databases"
+  },
+  {
+    "module": "sql-managed-instance",
+    "category": "SQL",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "sqlmi-",
+    "providerNamespace": "Microsoft.Sql",
+    "resourceType": "managedInstances"
+  },
+  {
+    "module": "storage-account",
+    "category": "Storage",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "st",
+    "providerNamespace": "Microsoft.Storage",
+    "resourceType": "storageAccounts"
+  },
+  {
+    "module": "azure-stor-simple",
+    "category": "Storage",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "ssimp",
+    "providerNamespace": "Microsoft.StorSimple",
+    "resourceType": "managers"
+  },
+  {
+    "module": "azure-cognitive-search",
+    "category": "Search",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "srch-",
+    "providerNamespace": "Microsoft.Search",
+    "resourceType": "searchServices"
+  },
+  {
+    "module": "azure-cognitive-services",
+    "category": "Cognitive Services",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "cog-",
+    "providerNamespace": "Microsoft.CognitiveServices",
+    "resourceType": "accounts"
+  },
+  {
+    "module": "azure-machine-learning-workspace",
+    "category": "Machine Learning",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "mlw-",
+    "providerNamespace": "Microsoft.MachineLearningServices",
+    "resourceType": "workspaces"
+  },
+  {
+    "module": "azure-analysis-services-server",
+    "category": "Analysis",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "as",
+    "providerNamespace": "Microsoft.AnalysisServices",
+    "resourceType": "servers"
+  },
+  {
+    "module": "azure-databricks-workspace",
+    "category": "Databricks",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "dbw-",
+    "providerNamespace": "Microsoft.Databricks",
+    "resourceType": "workspaces"
+  },
+  {
+    "module": "azure-stream-analytics",
+    "category": "Stream Analytics",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "asa-",
+    "providerNamespace": "Microsoft.StreamAnalytics",
+    "resourceType": "cluster"
+  },
+  {
+    "module": "azure-data-explorer-cluster",
+    "category": "Kusto",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "dec",
+    "providerNamespace": "Microsoft.Kusto",
+    "resourceType": "clusters"
+  },
+  {
+    "module": "azure-data-explorer-cluster-database",
+    "category": "Kusto",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "dedb",
+    "providerNamespace": "Microsoft.Kusto",
+    "resourceType": "clusters/databases"
+  },
+  {
+    "module": "azure-data-factory",
+    "category": "Data Factory",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "adf-",
+    "providerNamespace": "Microsoft.DataFactory",
+    "resourceType": "factories"
+  },
+  {
+    "module": "data-lake-store-account",
+    "category": "Data Lake",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "dls",
+    "providerNamespace": "Microsoft.DataLakeStore",
+    "resourceType": "accounts"
+  },
+  {
+    "module": "data-lake-analytics-account",
+    "category": "Data Lake",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "dla",
+    "providerNamespace": "Microsoft.DataLakeAnalytics",
+    "resourceType": "accounts"
+  },
+  {
+    "module": "event-hubs-namespace",
+    "category": "Event Hub",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "evhns-",
+    "providerNamespace": "Microsoft.EventHub",
+    "resourceType": "namespaces"
+  },
+  {
+    "module": "event-hub",
+    "category": "Event Hub",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "evh-",
+    "providerNamespace": "Microsoft.EventHub",
+    "resourceType": "namespaces/eventHubs"
+  },
+  {
+    "module": "event-grid-domain",
+    "category": "Event Grid",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "evgd-",
+    "providerNamespace": "Microsoft.EventGrid",
+    "resourceType": "domains"
+  },
+  {
+    "module": "event-grid-subscriptions",
+    "category": "Event Grid",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "evgs-",
+    "providerNamespace": "Microsoft.EventGrid",
+    "resourceType": "eventSubscriptions"
+  },
+  {
+    "module": "event-grid-topic",
+    "category": "Event Grid",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "evgt-",
+    "providerNamespace": "Microsoft.EventGrid",
+    "resourceType": "domains/topics"
+  },
+  {
+    "module": "hdinsight-hadoop-cluster",
+    "category": "HDInsight",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "hadoop-",
+    "providerNamespace": "Microsoft.HDInsight",
+    "resourceType": "clusters"
+  },
+  {
+    "module": "hdinsight-hbase-cluster",
+    "category": "HDInsight",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "hbase-",
+    "providerNamespace": "Microsoft.HDInsight",
+    "resourceType": "clusters"
+  },
+  {
+    "module": "hdinsight-kafka-cluster",
+    "category": "HDInsight",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "kafka-",
+    "providerNamespace": "Microsoft.HDInsight",
+    "resourceType": "clusters"
+  },
+  {
+    "module": "hdinsight-spark-cluster",
+    "category": "HDInsight",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "spark-",
+    "providerNamespace": "Microsoft.HDInsight",
+    "resourceType": "clusters"
+  },
+  {
+    "module": "hdinsight-storm-cluster",
+    "category": "HDInsight",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "storm-",
+    "providerNamespace": "Microsoft.HDInsight",
+    "resourceType": "clusters"
+  },
+  {
+    "module": "hdinsight-ml-services-cluster",
+    "category": "HDInsight",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "mls-",
+    "providerNamespace": "Microsoft.HDInsight",
+    "resourceType": "clusters"
+  },
+  {
+    "module": "iot-hub",
+    "category": "Internet of Things",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "iot-",
+    "providerNamespace": "Microsoft.Devices",
+    "resourceType": "IotHubs"
+  },
+  {
+    "module": "provisioning-services",
+    "category": "Devices",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "provs-",
+    "providerNamespace": "Microsoft.Devices",
+    "resourceType": "provisioningServices"
+  },
+  {
+    "module": "provisioning-services-certificate",
+    "category": "Devices",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "pcert-",
+    "providerNamespace": "Microsoft.Devices",
+    "resourceType": "provisioningServices/certificates"
+  },
+  {
+    "module": "power-bi-embedded",
+    "category": "Power BI",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "pbi-",
+    "providerNamespace": "Microsoft.PowerBIDedicated",
+    "resourceType": "capacities"
+  },
+  {
+    "module": "time-series-insights-environment",
+    "category": "Time Series Insights",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "tsi-",
+    "providerNamespace": "Microsoft.TimeSeriesInsights",
+    "resourceType": "environments"
+  },
+  {
+    "module": "virtual-desktop-host-pool",
+    "category": "Desktop Virtualization",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "vdpool-",
+    "providerNamespace": "Microsoft.DesktopVirtualization",
+    "resourceType": "hostPools"
+  },
+  {
+    "module": "virtual-desktop-application-group",
+    "category": "Desktop Virtualization",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "vdag-",
+    "providerNamespace": "Microsoft.DesktopVirtualization",
+    "resourceType": "applicationGroups"
+  },
+  {
+    "module": "virtual-desktop-workspace",
+    "category": "Desktop Virtualization",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "vdws-",
+    "providerNamespace": "Microsoft.DesktopVirtualization",
+    "resourceType": "workspaces"
+  },
+  {
+    "module": "app-configuration-store",
+    "category": "App Configuration",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "appcs-",
+    "providerNamespace": "Microsoft.AppConfiguration",
+    "resourceType": "configurationStores"
+  },
+  {
+    "module": "signalr",
+    "category": "SignalR",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "sigr",
+    "providerNamespace": "Microsoft.SignalRService",
+    "resourceType": "SignalR"
+  },
+  {
+    "module": "integration-account",
+    "category": "Logic Apps",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "ia-",
+    "providerNamespace": "Microsoft.Logic",
+    "resourceType": "integrationAccounts"
+  },
+  {
+    "module": "logic-apps",
+    "category": "Logic Apps",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "logic-",
+    "providerNamespace": "Microsoft.Logic",
+    "resourceType": "workflows"
+  },
+  {
+    "module": "service-bus",
+    "category": "Service Bus",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "sb-",
+    "providerNamespace": "Microsoft.ServiceBus",
+    "resourceType": "namespaces"
+  },
+  {
+    "module": "service-bus-queue",
+    "category": "Service Bus",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "sbq-",
+    "providerNamespace": "Microsoft.ServiceBus",
+    "resourceType": "namespaces/queues"
+  },
+  {
+    "module": "service-bus-topic",
+    "category": "Service Bus",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "sbt-",
+    "providerNamespace": "Microsoft.ServiceBus",
+    "resourceType": "namespaces/topics"
+  },
+  {
+    "module": "automation-account",
+    "category": "Automation",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "aa-",
+    "providerNamespace": "Microsoft.Automation",
+    "resourceType": "automationAccounts"
+  },
+  {
+    "module": "application-insights",
+    "category": "Monitoring",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "appi-",
+    "providerNamespace": "Microsoft.Insights",
+    "resourceType": "components"
+  },
+  {
+    "module": "azure-monitor-action-group",
+    "category": "Monitoring",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "ag-",
+    "providerNamespace": "Microsoft.Insights",
+    "resourceType": "actionGroups"
+  },
+  {
+    "module": "azure-pureview-instance",
+    "category": "Azure Purview",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "pview-",
+    "providerNamespace": "Microsoft.Purview",
+    "resourceType": "accounts"
+  },
+  {
+    "module": "blueprint",
+    "category": "Blueprint",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "bp-",
+    "providerNamespace": "Microsoft.Blueprint",
+    "resourceType": "blueprints"
+  },
+  {
+    "module": "blueprint-assignment",
+    "category": "Blueprint",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "bpa-",
+    "providerNamespace": "Microsoft.Blueprint",
+    "resourceType": "blueprints/artifacts"
+  },
+  {
+    "module": "key-vault",
+    "category": "Key Vault",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "kv-",
+    "providerNamespace": "Microsoft.KeyVault",
+    "resourceType": "vaults"
+  },
+  {
+    "module": "log-analytics-workspace",
+    "category": "Monitoring",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "log-",
+    "providerNamespace": "Microsoft.OperationalInsights",
+    "resourceType": "workspaces"
+  },
+  {
+    "module": "azure-migrate-project",
+    "category": "Migrate",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "migr-",
+    "providerNamespace": "Microsoft.Migrate",
+    "resourceType": "assessmentProjects"
+  },
+  {
+    "module": "database-migration-service-instance",
+    "category": "Migrate",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "dms-",
+    "providerNamespace": "Microsoft.DataMigration",
+    "resourceType": "services"
+  },
+  {
+    "module": "recovery-services-vault",
+    "category": "Backup",
+    "version": "0.1.0",
+    "preview": true,
+    "deprecated": false,
+    "prefix": "rsv-",
+    "providerNamespace": "Microsoft.RecoveryServices",
+    "resourceType": "vaults"
+  }
+]

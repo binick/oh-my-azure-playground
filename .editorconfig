@@ -1,0 +1,32 @@
+root = true
+
+[*]
+indent_style = space
+insert_final_newline = true
+
+[{*.html}]
+indent_size = 4
+
+[*.{cs}]
+indent_size = 4
+tab_width = 4
+
+[*.{*proj,xml,props,targets,tasks}]
+indent_size = 2
+tab_width = 2
+
+[*.{*yml,yaml,json}]
+indent_size = 2
+tab_width = 2
+
+[*.{*js,ts,css,scss}]
+indent_size = 2
+tab_width = 2
+
+[*.{*ps1,sh}]
+indent_size = 2
+tab_width = 2
+
+[*.{*bicep}]
+indent_size = 2
+tab_width = 2
