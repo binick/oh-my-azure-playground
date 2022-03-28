@@ -1,5 +1,11 @@
 targetScope = 'subscription'
 
+@description('An array of the allowed locations, all other locations will be denied by the created policy.')
+param allowedLocations array = []
+
+@description('An array of expected tags for resource group.')
+param expectedTags array = []
+
 @description('Enable policy assignment, by default the policy will not be assign.')
 param enableAssignment bool = false
 
@@ -21,6 +27,7 @@ module namingPolicy 'naming/main.bicep' = {
 module taggingPolicy 'tagging/main.bicep' = {
   name: 'tagging-policy'
   params: {
+    expectedTags: expectedTags
     enableAssignment: enableAssignment
     enforcementMode: enforcementMode
   }
@@ -29,6 +36,7 @@ module taggingPolicy 'tagging/main.bicep' = {
 module locatingPolicy 'locating/main.bicep' = {
   name: 'locating-policy'
   params: {
+    allowedLocations: allowedLocations
     enableAssignment: enableAssignment
     enforcementMode: enforcementMode
   }
