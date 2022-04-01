@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32319.34
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{83F9A2DA-3AB7-4A71-92EC-2AD80035AF32}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Playground.Cli", "src\cli\Playground.Cli.csproj", "{DD3D03C0-6875-45D3-B23D-62658F14FAF0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Playground", "src\playground\Playground.csproj", "{F7D7DF79-5553-474F-8EB0-2D7C4D345BFD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "eng", "eng", "{0654FA0C-AB89-4130-B677-003A8C7F87C8}"
+	ProjectSection(SolutionItems) = preProject
+		stylecop.json = stylecop.json
+		eng\Versions.props = eng\Versions.props
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.ResourceManager.Resources.MissingTypes", "src\azure-sdk-missing-types\Azure.ResourceManager.Resources.MissingTypes.csproj", "{EA1E49FB-D697-4E19-BF45-B952DC2433F0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DD3D03C0-6875-45D3-B23D-62658F14FAF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD3D03C0-6875-45D3-B23D-62658F14FAF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD3D03C0-6875-45D3-B23D-62658F14FAF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD3D03C0-6875-45D3-B23D-62658F14FAF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7D7DF79-5553-474F-8EB0-2D7C4D345BFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7D7DF79-5553-474F-8EB0-2D7C4D345BFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7D7DF79-5553-474F-8EB0-2D7C4D345BFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7D7DF79-5553-474F-8EB0-2D7C4D345BFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA1E49FB-D697-4E19-BF45-B952DC2433F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA1E49FB-D697-4E19-BF45-B952DC2433F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA1E49FB-D697-4E19-BF45-B952DC2433F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA1E49FB-D697-4E19-BF45-B952DC2433F0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DD3D03C0-6875-45D3-B23D-62658F14FAF0} = {83F9A2DA-3AB7-4A71-92EC-2AD80035AF32}
+		{F7D7DF79-5553-474F-8EB0-2D7C4D345BFD} = {83F9A2DA-3AB7-4A71-92EC-2AD80035AF32}
+		{EA1E49FB-D697-4E19-BF45-B952DC2433F0} = {83F9A2DA-3AB7-4A71-92EC-2AD80035AF32}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {84F77A92-9F7D-4B75-A18E-8C7CAE5F93E8}
+	EndGlobalSection
+EndGlobal

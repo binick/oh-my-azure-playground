@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.ResourceManager.Resources" Version="$(AzureResourceManagerResourcesVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\azure-sdk-missing-types\Azure.ResourceManager.Resources.MissingTypes.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\resource-naming\abbreviations.json" LinkBase="Assets" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  
+</Project>

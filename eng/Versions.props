@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+  <PropertyGroup>
+    <SpectreConsoleVersion>0.44.0</SpectreConsoleVersion>
+    <SpectreConsoleAnalyzerVersion>$(SpectreConsoleVersion)</SpectreConsoleAnalyzerVersion>
+    <AzureResourceManagerResourcesVersion>1.0.0-beta.6</AzureResourceManagerResourcesVersion>
+    <AzureIdentityVersion>1.5.0</AzureIdentityVersion>
+  </PropertyGroup>
+
+</Project>

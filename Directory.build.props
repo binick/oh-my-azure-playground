@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+  <Import Project="Sdk.props" Sdk="MsBullet.Sdk" />
+
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);SA1413;SA1600;SA1601</NoWarn>
+  </PropertyGroup>
+
+</Project>

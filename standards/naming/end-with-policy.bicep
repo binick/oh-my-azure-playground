@@ -1,19 +1,38 @@
 targetScope = 'subscription'
 
-var displayName = 'Require a prefix on resources, resource groups and subscriptions.'
-var version = '0.1.0'
-var preview = true
+@description('Determines under which category in the Azure portal the policy definition is displayed.')
+param category string = 'Naming'
+
+@description('Tracks details about the version of the contents of a policy definition.')
+param version string
+
+@description('True or false flag for if the policy definition is preview.')
+param preview bool = true
+
+@description('True or false flag for if the policy definition has been marked as deprecated.')
+param deprecated bool = false
+
+@allowed([
+  'Deny'
+  'Audit'
+  'Disabled'
+])
+@description('The effect determines what happens when the policy rule is evaluated to match.')
+param effect string = 'Deny'
+
+var displayName = 'Require a suffix on resources, resource groups and subscriptions.'
 
 resource policy 'Microsoft.Authorization/policyDefinitions@2021-06-01' = {
-  name: 'policy-start-with-naming'
+  name: 'policy-end-with-naming'
   properties: {
     displayName: preview ? '[Preview]: ${displayName}' : displayName
-    description: 'Enforces existence of a prefix.'
+    description: 'Enforces existence of a suffix.'
     policyType: 'Custom'
     metadata: {
       version: preview ? '${version}-preview' : version
-      category: 'General'
+      category: category
       preview: preview
+      deprecated: deprecated
     }
     parameters: {
       prividerNamespace: {
@@ -37,18 +56,6 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2021-06-01' = {
           description: 'Prefix that the resource must have, such as \'app-\''
         }
       }
-      effect: {
-        type: 'String'
-        metadata: {
-          displayName: 'Effect'
-          description: 'Enable or disable the execution of the policy'
-        }
-        allowedValues: [
-          'Audit'
-          'Deny'
-        ]
-        defaultValue: 'Audit'
-      }
     }
     mode: 'All'
     policyRule: {
@@ -56,16 +63,16 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2021-06-01' = {
         allOf: [
           {
             field: 'type'
-            equals: '[concat(parameters(\'prividerNamespace\'), \'/\', parameters(\'entity\')]'
+            equals: '[parameters(\'prividerNamespace\')]/[parameters(\'entity\')]'
           }
           {
             field: 'name'
-            notLike: '[concat(parameters(\'prefix\'), \'*\')]'
+            notLike: '*[parameters(\'prefix\')]'
           }
         ]
       }
       then: {
-        effect: '[parameters(\'effect\')]'
+        effect: effect
       }
     }
   }

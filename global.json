@@ -1,0 +1,8 @@
+{
+  "sdk": {
+    "allowPrerelease": false
+  },
+  "msbuild-sdks": {
+    "MsBullet.Sdk": "0.4.0"
+  }
+}
