@@ -15,7 +15,7 @@ namespace Playground.Policies
 
         public PolicyBuilder Enforce()
         {
-            this.EnforcementMode = EnforcementMode.Default;
+            this.EnforcementMode = EnforcementMode.Enforced;
             return this;
         }
 

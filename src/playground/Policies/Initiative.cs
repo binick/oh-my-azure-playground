@@ -6,27 +6,20 @@ using Azure.ResourceManager.Resources.Models;
 
 namespace Playground.Policies
 {
-    public class Initiative : PolicySetDefinitionData
+    public class Initiative : Resource<PolicySetDefinitionData>
     {
         public Initiative(string name, string displayName, string description, PolicyMetadata metadata, PolicyDefinitionReference policyDefinition, params PolicyDefinitionReference[] otherPolicyDefinitions)
+            : base("Microsoft.Authorization/policySetDefinitions", name, "2021-06-01")
         {
-            this.PolicySetName = name;
-            this.PolicyType = Azure.ResourceManager.Resources.Models.PolicyType.Custom;
-            this.DisplayName = metadata.IsPreview ? $"[Preview]: {displayName}" : displayName;
-            this.Description = description;
-            using var metadataStream = new MemoryStream();
-            using var metadataWriter = new Utf8JsonWriter(metadataStream);
-            metadataWriter.WriteObjectValue(metadata);
-            metadataWriter.Flush();
-            metadataStream.Seek(0, SeekOrigin.Begin);
-            this.Metadata = JsonSerializer.Deserialize<object>(metadataStream);
-            this.PolicyDefinitions.Add(policyDefinition);
+            this.Properties.PolicyType = PolicyType.Custom;
+            this.Properties.DisplayName = metadata.IsPreview ? $"[Preview]: {displayName}" : displayName;
+            this.Properties.Description = description;
+            this.Properties.Metadata = metadata.ToBinaryData();
+            this.Properties.PolicyDefinitions.Add(policyDefinition);
             foreach (var definition in otherPolicyDefinitions)
             {
-                this.PolicyDefinitions.Add(definition);
+                this.Properties.PolicyDefinitions.Add(definition);
             }
         }
-
-        public string PolicySetName { get; }
     }
 }

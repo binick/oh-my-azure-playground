@@ -13,11 +13,12 @@ namespace Playground.Policies.Naming
         public static readonly string DispayName = "Resources should be named correctly";
         public static readonly string Description = "This policy enforce a standard naming for resources";
 
-        private ResourceIdentifier policyDefinition;
+        private readonly IDictionary<string, string> specificPolicyParameters;
+        private ResourceIdentifier policyDefinition = null!;
 
-        public ResourceNamingInitiativeBuilder(ResourceIdentifier policyDefinition)
+        public ResourceNamingInitiativeBuilder()
         {
-            this.policyDefinition = policyDefinition;
+            this.specificPolicyParameters = new Dictionary<string, string>();
         }
 
         public ResourceNamingInitiativeBuilder UsePrefix()
@@ -27,7 +28,8 @@ namespace Playground.Policies.Naming
                 throw new InvalidOperationException();
             }
 
-            this.policyDefinition = TenantPolicyDefinition.CreateResourceIdentifier("policy-start-with-naming");
+            this.policyDefinition = TenantPolicyDefinitionResource.CreateResourceIdentifier(ResourcePrefixPolicyBuilder.Name);
+            this.specificPolicyParameters.Add("abbreviation", "prefix");
             return this;
         }
 
@@ -38,15 +40,21 @@ namespace Playground.Policies.Naming
                 throw new InvalidOperationException();
             }
 
-            this.policyDefinition = TenantPolicyDefinition.CreateResourceIdentifier("policy-end-with-naming");
+            this.policyDefinition = TenantPolicyDefinitionResource.CreateResourceIdentifier(ResourceSuffixPolicyBuilder.Name);
+            this.specificPolicyParameters.Add("abbreviation", "suffix");
             return this;
         }
 
         public override Initiative Build()
         {
+            if (this.policyDefinition is null)
+            {
+                this.UsePrefix();
+            }
+
             var json = JsonDocument.Parse(File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "Assets", "abbreviations.json")));
 
-            var policyCollection = ResourceNamingInitiativeBuilder.ParsePolicySetDefinition(json, this.policyDefinition);
+            var policyCollection = this.ParsePolicySetDefinition(json, this.policyDefinition!);
 
             return new Initiative(
                 Name,
@@ -57,31 +65,38 @@ namespace Playground.Policies.Naming
                 policyCollection.Skip(1).ToArray());
         }
 
-        private static IEnumerable<PolicyDefinitionReference> ParsePolicySetDefinition(JsonDocument json, ResourceIdentifier policy)
+        private IEnumerable<PolicyDefinitionReference> ParsePolicySetDefinition(JsonDocument json, ResourceIdentifier policy)
         {
             foreach (var element in json.RootElement.EnumerateArray())
             {
                 var abbreviation = element.GetProperty("abbreviation").GetString() !;
 
-                var reference = new PolicyDefinitionReference(policy)
+                if (element.TryGetProperty("hypenAllowed", out var withHypen) && withHypen.GetBoolean())
+                {
+                    abbreviation = policy.Name.Equals(ResourcePrefixPolicyBuilder.Name, StringComparison.OrdinalIgnoreCase)
+                        ? $"{abbreviation}-"
+                        : $"-{abbreviation}";
+                }
+
+                var reference = new PolicyDefinitionReference(policy!)
                 {
                     PolicyDefinitionReferenceId = DeterministicGuid.Parse(policy!, abbreviation).ToString()
                 };
-                reference.Parameters.Add("providerNamespace", new ParameterValuesValue
+                reference.Parameters.Add("providerNamespace", new ArmPolicyParameterValue
                 {
-                    Value = element.GetProperty("providerNamespace").GetString()
+                    Value = BinaryData.FromObjectAsJson(element.GetProperty("providerNamespace").GetString() !)
                 });
-                reference.Parameters.Add("entity", new ParameterValuesValue
+                reference.Parameters.Add("entity", new ArmPolicyParameterValue
                 {
-                    Value = element.GetProperty("resourceType").GetString()
+                    Value = BinaryData.FromObjectAsJson(element.GetProperty("resourceType").GetString() !)
                 });
-                reference.Parameters.Add("prefix", new ParameterValuesValue
+                reference.Parameters.Add(this.specificPolicyParameters["abbreviation"], new ArmPolicyParameterValue
                 {
-                    Value = abbreviation
+                    Value = BinaryData.FromObjectAsJson(abbreviation)
                 });
-                reference.Parameters.Add("effect", new ParameterValuesValue
+                reference.Parameters.Add("effect", new ArmPolicyParameterValue
                 {
-                    Value = "audit"
+                    Value = BinaryData.FromObjectAsJson("audit")
                 });
 
                 yield return reference;

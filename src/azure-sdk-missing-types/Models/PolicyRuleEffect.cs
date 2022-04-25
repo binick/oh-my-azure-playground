@@ -21,6 +21,11 @@ namespace Azure.ResourceManager.Resources.Models
 
         public string Effect { get; }
 
+        public static implicit operator string(PolicyRuleEffect effect)
+        {
+            return effect.Effect;
+        }
+
         public void Write(Utf8JsonWriter writer)
         {
             writer.WriteStartObject();

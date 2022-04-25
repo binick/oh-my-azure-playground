@@ -47,7 +47,7 @@ namespace Playground.Policies.Tagging
 
         public override Initiative Build()
         {
-            var policyDefintion = TenantPolicyDefinition.CreateResourceIdentifier("96670d01-0a4d-4649-9c89-2d3abc0a5025");
+            var policyDefintion = TenantPolicyDefinitionResource.CreateResourceIdentifier("96670d01-0a4d-4649-9c89-2d3abc0a5025");
 
             var suggestedTags = new Dictionary<string, string>
             {
@@ -99,9 +99,9 @@ namespace Playground.Policies.Tagging
                 {
                     PolicyDefinitionReferenceId = DeterministicGuid.Parse(policyDefintion!, tag.Key).ToString()
                 };
-                policy.Parameters.Add("tagName", new ParameterValuesValue
+                policy.Parameters.Add("tagName", new ArmPolicyParameterValue
                 {
-                    Value = tag.Value
+                    Value = BinaryData.FromString(tag.Value)
                 });
 
                 references.Add(policy);

@@ -1,8 +1,11 @@
 ﻿// See the LICENSE.TXT file in the project root for full license information.
 
-using Azure.ResourceManager;
-using Azure.ResourceManager.Core;
-using Azure.ResourceManager.Management;
+using System.Text;
+using System.Text.Json;
+using Azure;
+using Azure.Core;
+using Azure.ResourceManager.ManagementGroups;
+using Azure.ResourceManager.Models;
 using Azure.ResourceManager.Resources;
 using Azure.ResourceManager.Resources.Models;
 
@@ -27,75 +30,57 @@ namespace Playground.Policies
 
         public IEnumerable<Assignment> Assignments => this.assignments;
 
-        public async Task ApplyAsync(Subscription subscription, CancellationToken cancellationToken = default)
+        public async Task DeployAsync(SubscriptionResource subscription, CancellationToken cancellationToken = default)
         {
-            var policyCollection = subscription.GetSubscriptionPolicyDefinitions();
+            var policyDefinitionCollection = subscription.GetSubscriptionPolicyDefinitions();
             foreach (var policy in this.Policies)
             {
-                await policyCollection.CreateOrUpdateAsync(
-                    policyDefinitionName: policy.PolicyName,
-                    parameters: policy,
-                    waitForCompletion: false);
+                var operation = await policyDefinitionCollection.CreateOrUpdateAsync(
+                    WaitUntil.Started,
+                    policy.Name,
+                    policy.Properties,
+                    cancellationToken);
+                await operation.WaitForCompletionAsync(cancellationToken);
             }
 
-            var initiativeCollection = subscription.GetSubscriptionPolicySetDefinitions();
-            foreach (var initiative in this.Initiatives)
-            {
-                await initiativeCollection.CreateOrUpdateAsync(
-                    policySetDefinitionName: initiative.PolicySetName,
-                    parameters: initiative,
-                    waitForCompletion: false);
-            }
-
-            await this.InternalApplyAsync(subscription, cancellationToken);
-
-            subscription.GetDeployments();
+            await this.InternalDeployAsync(subscription.GetArmDeployments(), cancellationToken);
         }
 
-        public async Task ApplyAsync(ManagementGroup managementGroup, CancellationToken cancellationToken = default)
+        public async Task DeployAsync(ManagementGroupResource managementGroup, CancellationToken cancellationToken = default)
         {
-            var policyCollection = managementGroup.GetManagementGroupPolicyDefinitions();
+            var policyDefinitionCollection = managementGroup.GetManagementGroupPolicyDefinitions();
             foreach (var policy in this.Policies)
             {
-                await policyCollection.CreateOrUpdateAsync(
-                    policyDefinitionName: policy.PolicyName,
-                    parameters: policy,
-                    waitForCompletion: false);
+                var operation = await policyDefinitionCollection.CreateOrUpdateAsync(
+                    WaitUntil.Started,
+                    policy.Name,
+                    policy.Properties,
+                    cancellationToken);
+                await operation.WaitForCompletionAsync(cancellationToken);
             }
 
-            var initiativeCollection = managementGroup.GetManagementGroupPolicySetDefinitions();
-            foreach (var initiative in this.Initiatives)
-            {
-                await initiativeCollection.CreateOrUpdateAsync(
-                    policySetDefinitionName: initiative.PolicySetName,
-                    parameters: initiative,
-                    waitForCompletion: false);
-            }
-
-            await this.InternalApplyAsync(managementGroup, cancellationToken);
+            await this.InternalDeployAsync(managementGroup.GetArmDeployments(), cancellationToken);
         }
 
-        private async Task InternalApplyAsync(ArmResource targetScope, CancellationToken cancellationToken = default)
+        private async Task InternalDeployAsync(ArmDeploymentCollection deployments, CancellationToken cancellationToken = default)
         {
-            var assignamentCollection = targetScope.GetPolicyAssignments();
-            foreach (var assignment in this.Assignments)
-            {
-                await assignamentCollection.CreateOrUpdateAsync(
-                    policyAssignmentName: assignment.AssignmentName,
-                    parameters: assignment,
-                    waitForCompletion: false,
-                    cancellationToken: cancellationToken);
-            }
-        }
+            var template = new SubscriptionDeploymentTemplateData(((IEnumerable<Resource>)this.initiatives)
+                .Concat(this.assignments)
+                .ToArray()).ToBinaryData();
 
-        private async Task InternalDeployAsync(DeploymentCollection deployments, CancellationToken cancellationToken = default)
-        {
             var operation = await deployments.CreateOrUpdateAsync(
-                deploymentName: string.Empty,
-                parameters: new DeploymentInput(new DeploymentProperties(DeploymentMode.Incremental)),
-                waitForCompletion: false);
+                deploymentName: Guid.NewGuid().ToString(),
+                content: new ArmDeploymentContent(new ArmDeploymentProperties(ArmDeploymentMode.Incremental)
+                {
+                    Template = template,
+                })
+                {
+                    Location = AzureLocation.WestEurope
+                },
+                waitUntil: WaitUntil.Started,
+                cancellationToken: cancellationToken);
 
-
+            await operation.WaitForCompletionAsync(cancellationToken);
         }
     }
 }

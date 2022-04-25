@@ -1,4 +1,6 @@
-﻿using System.Security.Cryptography;
+﻿// See the LICENSE.TXT file in the project root for full license information.
+
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Azure.ResourceManager.Resources

@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿// See the LICENSE.TXT file in the project root for full license information.
+
+using System.Text.Json;
 
 namespace Azure.ResourceManager.Resources
 {

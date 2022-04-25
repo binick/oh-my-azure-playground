@@ -1,4 +1,7 @@
-﻿using Azure.ResourceManager.Resources;
+﻿// See the LICENSE.TXT file in the project root for full license information.
+
+using System.Reflection;
+using Azure.ResourceManager.Resources;
 
 namespace System.Text.Json
 {
@@ -16,7 +19,7 @@ namespace System.Text.Json
                     writer.WriteStringValue(Convert.ToBase64String(bytes));
                     break;
                 case ReadOnlyMemory<byte> rom:
-                    writer.WriteStringValue(Convert.ToBase64String(rom.ToArray()));
+                    writer.WriteRawValue(rom.ToString());
                     break;
                 case int i:
                     writer.WriteNumberValue(i);
@@ -38,6 +41,9 @@ namespace System.Text.Json
                     break;
                 case DateTime dateTime:
                     writer.WriteStringValue(dateTime);
+                    break;
+                case JsonElement json:
+                    writer.WriteRawValue(json.ToString());
                     break;
                 case IEnumerable<KeyValuePair<string, object>> enumerable:
                     writer.WriteStartObject();
@@ -61,11 +67,21 @@ namespace System.Text.Json
                 case IUtf8JsonSerializable serializable:
                     serializable.Write(writer);
                     break;
-
                 default:
-                    throw new NotSupportedException("Not supported type " + value.GetType());
+#pragma warning disable S3011 // Reflection should not be used to increase accessibility of classes, methods, or fields
+                    var writerMethod = value.GetType().GetMethod("Azure.Core.IUtf8JsonSerializable.Write", BindingFlags.Instance | BindingFlags.NonPublic) !;
+#pragma warning restore S3011 // Reflection should not be used to increase accessibility of classes, methods, or fields
+                    if (writerMethod is not null)
+                    {
+                        writerMethod.Invoke(value, new[] { writer });
+                    }
+                    else
+                    {
+                        throw new NotSupportedException("Not supported type " + value.GetType());
+                    }
+
+                    break;
             }
         }
-
     }
 }

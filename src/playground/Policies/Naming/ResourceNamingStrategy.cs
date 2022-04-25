@@ -19,7 +19,7 @@ namespace Playground.Policies.Naming
                 new Assignment(
                     $"assignment-{ResourceNamingInitiativeBuilder.Name}",
                     "Resource should be named correctly",
-                    TenantPolicyDefinition.CreateResourceIdentifier(ResourceNamingInitiativeBuilder.Name),
+                    TenantPolicyDefinitionResource.CreateResourceIdentifier(ResourceNamingInitiativeBuilder.Name),
                     enforcementMode)
             };
         }

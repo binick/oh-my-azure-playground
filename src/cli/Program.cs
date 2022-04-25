@@ -1,9 +1,11 @@
-﻿using Azure.Identity;
+﻿// See the LICENSE.TXT file in the project root for full license information.
+
+using Azure;
+using Azure.Identity;
 using Azure.ResourceManager;
 using Azure.ResourceManager.Resources;
 using Azure.ResourceManager.Resources.Models;
 using Playground.Policies.Naming;
-using Spectre.Console;
 
 namespace Playground.Cli
 {
@@ -14,23 +16,11 @@ namespace Playground.Cli
             var client = new ArmClient(new InteractiveBrowserCredential());
             var subscription = await client.GetDefaultSubscriptionAsync();
 
-            //DeleteAllForSub(subscription);
-
-            var startWithDefinitionPolicy = new ResourcePrefixPolicyBuilder().Build();
-            var endWithDefinitionPolicy = new ResourceSuffixPolicyBuilder().Build();
-            var startWithSetPolicyDefinition = new ResourceNamingInitiativeBuilder.Build();
-            AnsiConsole.WriteLine(subscription?.Id.SubscriptionId);
-            var policyCollection = subscription?.GetSubscriptionPolicyDefinitions();
-            var r = await policyCollection.CreateOrUpdate(true, startWithDefinitionPolicy.PolicyName, startWithDefinitionPolicy).WaitForCompletionAsync();
-            AnsiConsole.WriteLine(r.Value.Data.Name);
-            r = await policyCollection.CreateOrUpdate(true, endWithDefinitionPolicy.PolicyName, endWithDefinitionPolicy).WaitForCompletionAsync();
-            AnsiConsole.WriteLine(r.Value.Data.Name);
-            var policySetCollection = subscription?.GetSubscriptionPolicySetDefinitions();
-            var s = await policySetCollection.CreateOrUpdate(true, startWithSetPolicyDefinition.PolicySetName, startWithSetPolicyDefinition).WaitForCompletionAsync();
-            AnsiConsole.WriteLine(s.Value.Data.Name);
+            // DeleteAllForSub(subscription);
+            await new ResourceNamingStrategyBuilder().Build().DeployAsync(subscription);
         }
 
-        private static void DeleteAllForSub(Subscription subscription)
+        private static void DeleteAllForSub(SubscriptionResource subscription)
         {
             var policyCollection = subscription.GetSubscriptionPolicyDefinitions();
             var policies = policyCollection.Where(p => p.Data.PolicyType.Value.Equals(PolicyType.Custom));
@@ -40,10 +30,10 @@ namespace Playground.Cli
             {
                 foreach (var assignemnt in assignments.Where(a => a.Data.PolicyDefinitionId.Equals(policy.Data.Id)))
                 {
-                    assignemnt.Delete(true);
+                    assignemnt.Delete(WaitUntil.Completed);
                 }
 
-                policy.Delete(true);
+                policy.Delete(WaitUntil.Completed);
             }
         }
     }

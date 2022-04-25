@@ -7,5 +7,9 @@
 
     <RootNamespace>Azure.ResourceManager.Resources</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.ResourceManager.Resources" Version="$(AzureResourceManagerResourcesVersion)" />
+  </ItemGroup>
   
 </Project>

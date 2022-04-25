@@ -27,11 +27,11 @@ namespace Playground.Policies.Naming
                         new PolicyRuleEqualsCondition("name", "[concat('*', parameters('suffix'))]")),
                     new PolicyRuleEffect("[parameters('effect')]")));
 
-            policy.Mode = "All";
+            policy.Properties.Mode = "All";
 
-            policy.Parameters.Add(key: "prividerNamespace", value: new ParameterDefinitionsValue
+            policy.Properties.Parameters.Add(key: "prividerNamespace", value: new ArmPolicyParameter
             {
-                Type = ParameterType.String,
+                ParameterType = ArmPolicyParameterType.String,
                 Metadata = new ParameterDefinitionsValueMetadata
                 {
                     DisplayName = "Resource provider namespace",
@@ -39,9 +39,9 @@ namespace Playground.Policies.Naming
                 }
             });
 
-            policy.Parameters.Add(key: "entity", value: new ParameterDefinitionsValue
+            policy.Properties.Parameters.Add(key: "entity", value: new ArmPolicyParameter
             {
-                Type = ParameterType.String,
+                ParameterType = ArmPolicyParameterType.String,
                 Metadata = new ParameterDefinitionsValueMetadata
                 {
                     DisplayName = "Entity",
@@ -49,9 +49,9 @@ namespace Playground.Policies.Naming
                 }
             });
 
-            policy.Parameters.Add(key: "suffix", value: new ParameterDefinitionsValue
+            policy.Properties.Parameters.Add(key: "suffix", value: new ArmPolicyParameter
             {
-                Type = ParameterType.String,
+                ParameterType = ArmPolicyParameterType.String,
                 Metadata = new ParameterDefinitionsValueMetadata
                 {
                     DisplayName = "Suffix",
@@ -59,18 +59,20 @@ namespace Playground.Policies.Naming
                 }
             });
 
-            var effectDefinition = new ParameterDefinitionsValue
+            var effectDefinition = new ArmPolicyParameter
             {
-                Type = ParameterType.String,
+                ParameterType = ArmPolicyParameterType.String,
                 Metadata = new ParameterDefinitionsValueMetadata
                 {
                     DisplayName = "Effect",
                     Description = "Enable or disable the execution of the policy"
                 }
             };
-            effectDefinition.AllowedValues.Add(PolicyRuleEffect.Audit.Effect);
-            effectDefinition.AllowedValues.Add(PolicyRuleEffect.Deny.Effect);
-            policy.Parameters.Add(key: "effect", value: effectDefinition);
+
+            // Todo: seems the allowed values cause a serialization exception.
+            // effectDefinition.AllowedValues.Add(BinaryData.FromString(PolicyRuleEffect.Audit.Effect));
+            // effectDefinition.AllowedValues.Add(BinaryData.FromString(PolicyRuleEffect.Deny.Effect));
+            policy.Properties.Parameters.Add(key: "effect", value: effectDefinition);
 
             return policy;
         }

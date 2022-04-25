@@ -30,7 +30,7 @@ namespace Playground.Policies
 
         public StrategyBuilder Enforce()
         {
-            this.EnforcementMode = EnforcementMode.Default;
+            this.EnforcementMode = EnforcementMode.Enforced;
             return this;
         }
 

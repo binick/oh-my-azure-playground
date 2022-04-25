@@ -7,28 +7,22 @@ using Azure.ResourceManager.Resources.Models;
 
 namespace Playground.Policies
 {
-    public class Assignment : PolicyAssignmentData
+    public class Assignment : Resource<PolicyAssignmentData>
     {
         public Assignment(string name, string displayName, ResourceIdentifier policyDefinition, AssignmentMetadata metadata, EnforcementMode enforcementMode)
             : this(name, displayName, policyDefinition, enforcementMode)
         {
-            using var metadataStream = new MemoryStream();
-            using var metadataWriter = new Utf8JsonWriter(metadataStream);
-            metadataWriter.WriteObjectValue(metadata);
-            metadataWriter.Flush();
-            metadataStream.Seek(0, SeekOrigin.Begin);
-            this.Metadata = JsonSerializer.Deserialize<object>(metadataStream);
+            this.Properties.Metadata = metadata.ToBinaryData();
         }
 
         public Assignment(string name, string displayName, ResourceIdentifier policyDefinition, EnforcementMode enforcementMode)
+            : base("Microsoft.Authorization/policyAssignments", name, "2021-06-01")
         {
-            this.AssignmentName = name;
-            this.DisplayName = displayName;
-            this.Description = "This policy assignment was automatically created by oh-my-azure-playground";
-            this.EnforcementMode = enforcementMode;
-            this.PolicyDefinitionId = policyDefinition;
+            this.Properties = new PolicyAssignmentData();
+            this.Properties.DisplayName = displayName;
+            this.Properties.Description = "This policy assignment was automatically created by oh-my-azure-playground";
+            this.Properties.EnforcementMode = enforcementMode;
+            this.Properties.PolicyDefinitionId = policyDefinition;
         }
-
-        public string AssignmentName { get; }
     }
 }

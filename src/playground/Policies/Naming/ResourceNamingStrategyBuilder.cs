@@ -4,12 +4,14 @@ using Azure.ResourceManager.Resources;
 
 namespace Playground.Policies.Naming
 {
-    internal class ResourceNamingStrategyBuilder : StrategyBuilder
+    public class ResourceNamingStrategyBuilder : StrategyBuilder
     {
+        private readonly ResourceNamingInitiativeBuilder resourceNamingInitiativeBuilder;
         private Policy? abbereviationPolicy;
 
         public ResourceNamingStrategyBuilder()
         {
+            this.resourceNamingInitiativeBuilder = new ResourceNamingInitiativeBuilder();
         }
 
         public ResourceNamingStrategyBuilder UsePrefix()
@@ -20,6 +22,7 @@ namespace Playground.Policies.Naming
             }
 
             this.abbereviationPolicy = new ResourcePrefixPolicyBuilder().Build();
+            this.resourceNamingInitiativeBuilder.UsePrefix();
             return this;
         }
 
@@ -31,6 +34,7 @@ namespace Playground.Policies.Naming
             }
 
             this.abbereviationPolicy = new ResourceSuffixPolicyBuilder().Build();
+            this.resourceNamingInitiativeBuilder.UseSuffix();
             return this;
         }
 
@@ -43,7 +47,7 @@ namespace Playground.Policies.Naming
 
             return new ResourceNamingStrategy(
                 this.abbereviationPolicy!,
-                new ResourceNamingInitiativeBuilder(TenantPolicyDefinition.CreateResourceIdentifier(this.abbereviationPolicy!.PolicyName)).Build(),
+                this.resourceNamingInitiativeBuilder.Build(),
                 this.EnforcementMode);
         }
     }

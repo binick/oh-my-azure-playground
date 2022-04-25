@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.ResourceManager.Resources" Version="$(AzureResourceManagerResourcesVersion)" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\azure-sdk-missing-types\Azure.ResourceManager.Resources.MissingTypes.csproj" />
   </ItemGroup>
 

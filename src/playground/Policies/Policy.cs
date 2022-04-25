@@ -6,28 +6,16 @@ using Azure.ResourceManager.Resources.Models;
 
 namespace Playground.Policies
 {
-    public class Policy : PolicyDefinitionData
+    public class Policy : Resource<PolicyDefinitionData>
     {
         public Policy(string name, string displayName, string description, PolicyMetadata metadata, PolicyRule policyRule)
+            : base("Microsoft.Authorization/policyDefinitions", name, "2021-06-01")
         {
-            this.PolicyName = name;
-            this.PolicyType = Azure.ResourceManager.Resources.Models.PolicyType.Custom;
-            this.DisplayName = metadata.IsPreview ? $"[Preview]: {displayName}" : displayName;
-            this.Description = description;
-            using var metadataStream = new MemoryStream();
-            using var metadataWriter = new Utf8JsonWriter(metadataStream);
-            metadataWriter.WriteObjectValue(metadata);
-            metadataWriter.Flush();
-            metadataStream.Seek(0, SeekOrigin.Begin);
-            this.Metadata = JsonSerializer.Deserialize<object>(metadataStream);
-            using var policyRuleStream = new MemoryStream();
-            using var policyRuleWriter = new Utf8JsonWriter(policyRuleStream);
-            policyRuleWriter.WriteObjectValue(policyRule);
-            policyRuleWriter.Flush();
-            policyRuleStream.Seek(0, SeekOrigin.Begin);
-            this.PolicyRule = JsonSerializer.Deserialize<object>(policyRuleStream);
+            this.Properties.PolicyType = PolicyType.Custom;
+            this.Properties.DisplayName = metadata.IsPreview ? $"[Preview]: {displayName}" : displayName;
+            this.Properties.Description = description;
+            this.Properties.Metadata = metadata.ToBinaryData();
+            this.Properties.PolicyRule = policyRule.ToBinaryData();
         }
-
-        public string PolicyName { get; }
     }
 }

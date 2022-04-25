@@ -1,5 +1,6 @@
 ﻿// See the LICENSE.TXT file in the project root for full license information.
 
+using Azure.ResourceManager.Resources;
 using Azure.ResourceManager.Resources.Models;
 
 namespace Playground.Policies.Naming
@@ -27,51 +28,96 @@ namespace Playground.Policies.Naming
                         new PolicyRuleEqualsCondition("name", "[concat(parameters('prefix'), '*')]")),
                     new PolicyRuleEffect("[parameters('effect')]")));
 
-            policy.Mode = "All";
+            policy.Properties.Mode = "All";
 
-            policy.Parameters.Add(key: "providerNamespace", value: new ParameterDefinitionsValue
+            var providerNamespaceDefinition = new ArmPolicyParameter
             {
-                Type = ParameterType.String,
+                ParameterType = ArmPolicyParameterType.String,
                 Metadata = new ParameterDefinitionsValueMetadata
                 {
                     DisplayName = "Resource provider namespace",
                     Description = "Identify the ARM resource provider"
                 }
-            });
+            };
+            policy.Properties.Parameters.Add(key: "providerNamespace", value: providerNamespaceDefinition);
 
-            policy.Parameters.Add(key: "entity", value: new ParameterDefinitionsValue
+            // policy.AddTemplateParameter("providerNamespace", new
+            // {
+            //    type = "string",
+            //    defaultValue = string.Empty,
+            //    metadata = new
+            //    {
+            //        description = "Placeholder parameter to validate ARM template"
+            //    }
+            // });
+
+            var entityDefinition = new ArmPolicyParameter
             {
-                Type = ParameterType.String,
+                ParameterType = ArmPolicyParameterType.String,
                 Metadata = new ParameterDefinitionsValueMetadata
                 {
                     DisplayName = "Entity",
                     Description = "Name of the ARM entity"
                 }
-            });
+            };
+            policy.Properties.Parameters.Add(key: "entity", value: entityDefinition);
 
-            policy.Parameters.Add(key: "prefix", value: new ParameterDefinitionsValue
+            // policy.AddTemplateParameter("entity", new
+            // {
+            //    type = "string",
+            //    defaultValue = string.Empty,
+            //    metadata = new
+            //    {
+            //        description = "Placeholder parameter to validate ARM template"
+            //    }
+            // });
+
+            var prefixDefinition = new ArmPolicyParameter
             {
-                Type = ParameterType.String,
+                ParameterType = ArmPolicyParameterType.String,
                 Metadata = new ParameterDefinitionsValueMetadata
                 {
                     DisplayName = "Prefix",
                     Description = "Prefix that the resource must have, such as 'app-'"
                 }
-            });
+            };
+            policy.Properties.Parameters.Add(key: "prefix", value: prefixDefinition);
 
-            var effectDefinition = new ParameterDefinitionsValue
+            // policy.AddTemplateParameter("prefix", new
+            // {
+            //    type = "string",
+            //    defaultValue = string.Empty,
+            //    metadata = new
+            //    {
+            //        description = "Placeholder parameter to validate ARM template"
+            //    }
+            // });
+
+            var effectDefinition = new ArmPolicyParameter
             {
-                Type = ParameterType.String,
+                ParameterType = ArmPolicyParameterType.String,
                 Metadata = new ParameterDefinitionsValueMetadata
                 {
                     DisplayName = "Effect",
                     Description = "Enable or disable the execution of the policy"
                 }
             };
-            effectDefinition.AllowedValues.Add(PolicyRuleEffect.Audit.Effect);
-            effectDefinition.AllowedValues.Add(PolicyRuleEffect.Deny.Effect);
 
-            policy.Parameters.Add(key: "effect", value: effectDefinition);
+            // Todo: seems the allowed values cause a serialization exception.
+            // effectDefinition.AllowedValues.Add(BinaryData.FromString(PolicyRuleEffect.Audit));
+            // effectDefinition.AllowedValues.Add(BinaryData.FromString(PolicyRuleEffect.Deny));
+
+            policy.Properties.Parameters.Add(key: "effect", value: effectDefinition);
+
+            // policy.AddTemplateParameter("effect", new
+            // {
+            //    type = "string",
+            //    defaultValue = PolicyRuleEffect.Audit.Effect,
+            //    metadata = new
+            //    {
+            //        description = "Placeholder parameter to validate ARM template"
+            //    }
+            // });
 
             return policy;
         }

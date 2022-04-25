@@ -1,4 +1,6 @@
-﻿using Azure.ResourceManager.Resources;
+﻿// See the LICENSE.TXT file in the project root for full license information.
+
+using Azure.ResourceManager.Resources;
 using Azure.ResourceManager.Resources.Models;
 
 namespace Playground.Policies.Tagging
@@ -20,7 +22,7 @@ namespace Playground.Policies.Tagging
                 new Assignment(
                     name: $"assignment-{ResourceGroupTaggingInitiativeBuilder.Name}",
                     displayName: "Resource group should be tagged correctly",
-                    policyDefinition: TenantPolicyDefinition.CreateResourceIdentifier(ResourceGroupTaggingInitiativeBuilder.Name),
+                    policyDefinition: TenantPolicyDefinitionResource.CreateResourceIdentifier(ResourceGroupTaggingInitiativeBuilder.Name),
                     enforcementMode: enforcementMode)
             };
         }
