@@ -22,7 +22,12 @@ namespace Playground.Policies
             this.Properties.DisplayName = displayName;
             this.Properties.Description = "This policy assignment was automatically created by oh-my-azure-playground";
             this.Properties.EnforcementMode = enforcementMode;
-            this.Properties.PolicyDefinitionId = policyDefinition;
+            this.Properties.PolicyDefinitionId = this.EscapeMalformedSubscriptionResourceIdentifier(policyDefinition);
+        }
+
+        private string EscapeMalformedSubscriptionResourceIdentifier(ResourceIdentifier resourceIdentifier)
+        {
+            return resourceIdentifier.ToString().Replace("/subscriptions//subscriptions", "/subscriptions");
         }
     }
 }

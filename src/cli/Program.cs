@@ -17,7 +17,7 @@ namespace Playground.Cli
             var subscription = await client.GetDefaultSubscriptionAsync();
 
             // DeleteAllForSub(subscription);
-            await new ResourceNamingStrategyBuilder().Build().DeployAsync(subscription);
+            await new ResourceNamingStrategyBuilder(subscription).Build().DeployAsync(subscription);
         }
 
         private static void DeleteAllForSub(SubscriptionResource subscription)

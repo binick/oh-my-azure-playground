@@ -30,8 +30,15 @@ namespace Azure.ResourceManager.Resources.Models
         {
             writer.WriteStartObject();
             writer.WritePropertyName("effect");
-            writer.WriteObjectValue(this.Effect);
+            writer.WriteObjectValue(this.EspaceExperession(this.Effect));
             writer.WriteEndObject();
+        }
+
+        private string EspaceExperession(string value)
+        {
+            return value.StartsWith('[') && value.EndsWith(']')
+                ? $"[{value}"
+                : value;
         }
     }
 }

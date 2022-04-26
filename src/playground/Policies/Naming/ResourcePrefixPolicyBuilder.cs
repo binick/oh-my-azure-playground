@@ -41,16 +41,6 @@ namespace Playground.Policies.Naming
             };
             policy.Properties.Parameters.Add(key: "providerNamespace", value: providerNamespaceDefinition);
 
-            // policy.AddTemplateParameter("providerNamespace", new
-            // {
-            //    type = "string",
-            //    defaultValue = string.Empty,
-            //    metadata = new
-            //    {
-            //        description = "Placeholder parameter to validate ARM template"
-            //    }
-            // });
-
             var entityDefinition = new ArmPolicyParameter
             {
                 ParameterType = ArmPolicyParameterType.String,
@@ -62,16 +52,6 @@ namespace Playground.Policies.Naming
             };
             policy.Properties.Parameters.Add(key: "entity", value: entityDefinition);
 
-            // policy.AddTemplateParameter("entity", new
-            // {
-            //    type = "string",
-            //    defaultValue = string.Empty,
-            //    metadata = new
-            //    {
-            //        description = "Placeholder parameter to validate ARM template"
-            //    }
-            // });
-
             var prefixDefinition = new ArmPolicyParameter
             {
                 ParameterType = ArmPolicyParameterType.String,
@@ -82,16 +62,6 @@ namespace Playground.Policies.Naming
                 }
             };
             policy.Properties.Parameters.Add(key: "prefix", value: prefixDefinition);
-
-            // policy.AddTemplateParameter("prefix", new
-            // {
-            //    type = "string",
-            //    defaultValue = string.Empty,
-            //    metadata = new
-            //    {
-            //        description = "Placeholder parameter to validate ARM template"
-            //    }
-            // });
 
             var effectDefinition = new ArmPolicyParameter
             {
@@ -108,16 +78,6 @@ namespace Playground.Policies.Naming
             // effectDefinition.AllowedValues.Add(BinaryData.FromString(PolicyRuleEffect.Deny));
 
             policy.Properties.Parameters.Add(key: "effect", value: effectDefinition);
-
-            // policy.AddTemplateParameter("effect", new
-            // {
-            //    type = "string",
-            //    defaultValue = PolicyRuleEffect.Audit.Effect,
-            //    metadata = new
-            //    {
-            //        description = "Placeholder parameter to validate ARM template"
-            //    }
-            // });
 
             return policy;
         }

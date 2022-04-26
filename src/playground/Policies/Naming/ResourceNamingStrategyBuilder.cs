@@ -1,5 +1,7 @@
 ﻿// See the LICENSE.TXT file in the project root for full license information.
 
+using Azure.ResourceManager;
+using Azure.ResourceManager.ManagementGroups;
 using Azure.ResourceManager.Resources;
 
 namespace Playground.Policies.Naming
@@ -7,11 +9,13 @@ namespace Playground.Policies.Naming
     public class ResourceNamingStrategyBuilder : StrategyBuilder
     {
         private readonly ResourceNamingInitiativeBuilder resourceNamingInitiativeBuilder;
+        private readonly ArmResource parent;
         private Policy? abbereviationPolicy;
 
-        public ResourceNamingStrategyBuilder()
+        public ResourceNamingStrategyBuilder(ArmResource parent)
         {
-            this.resourceNamingInitiativeBuilder = new ResourceNamingInitiativeBuilder();
+            this.resourceNamingInitiativeBuilder = new ResourceNamingInitiativeBuilder(parent);
+            this.parent = parent;
         }
 
         public ResourceNamingStrategyBuilder UsePrefix()
@@ -45,10 +49,23 @@ namespace Playground.Policies.Naming
                 this.UsePrefix();
             }
 
-            return new ResourceNamingStrategy(
-                this.abbereviationPolicy!,
-                this.resourceNamingInitiativeBuilder.Build(),
-                this.EnforcementMode);
+            if (this.parent is SubscriptionResource subscription)
+            {
+                return new ResourceNamingStrategy(
+                    subscription,
+                    this.abbereviationPolicy!,
+                    this.resourceNamingInitiativeBuilder.Build(),
+                    this.EnforcementMode);
+            }
+            else
+            {
+                return new ResourceNamingStrategy(
+                    (ManagementGroupResource)this.parent,
+                    this.abbereviationPolicy!,
+                    this.resourceNamingInitiativeBuilder.Build(),
+                    this.EnforcementMode);
+            }
+
         }
     }
 }

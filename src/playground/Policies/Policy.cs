@@ -1,6 +1,5 @@
 ﻿// See the LICENSE.TXT file in the project root for full license information.
 
-using System.Text.Json;
 using Azure.ResourceManager.Resources;
 using Azure.ResourceManager.Resources.Models;
 

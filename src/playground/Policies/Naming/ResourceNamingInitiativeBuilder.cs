@@ -2,6 +2,8 @@
 
 using System.Text.Json;
 using Azure.Core;
+using Azure.ResourceManager;
+using Azure.ResourceManager.ManagementGroups;
 using Azure.ResourceManager.Resources;
 using Azure.ResourceManager.Resources.Models;
 
@@ -14,11 +16,18 @@ namespace Playground.Policies.Naming
         public static readonly string Description = "This policy enforce a standard naming for resources";
 
         private readonly IDictionary<string, string> specificPolicyParameters;
+        private readonly ArmResource parent;
         private ResourceIdentifier policyDefinition = null!;
 
-        public ResourceNamingInitiativeBuilder()
+        public ResourceNamingInitiativeBuilder(ArmResource parent)
         {
+            if (parent is not SubscriptionResource or ManagementGroupResource)
+            {
+                throw new InvalidOperationException(nameof(parent));
+            }
+
             this.specificPolicyParameters = new Dictionary<string, string>();
+            this.parent = parent;
         }
 
         public ResourceNamingInitiativeBuilder UsePrefix()
@@ -28,7 +37,9 @@ namespace Playground.Policies.Naming
                 throw new InvalidOperationException();
             }
 
-            this.policyDefinition = TenantPolicyDefinitionResource.CreateResourceIdentifier(ResourcePrefixPolicyBuilder.Name);
+            this.policyDefinition = this.parent is SubscriptionResource
+                ? SubscriptionPolicyDefinitionResource.CreateResourceIdentifier(this.parent.Id, ResourcePrefixPolicyBuilder.Name)
+                : ManagementGroupPolicyDefinitionResource.CreateResourceIdentifier(this.parent.Id, ResourcePrefixPolicyBuilder.Name);
             this.specificPolicyParameters.Add("abbreviation", "prefix");
             return this;
         }
@@ -40,7 +51,9 @@ namespace Playground.Policies.Naming
                 throw new InvalidOperationException();
             }
 
-            this.policyDefinition = TenantPolicyDefinitionResource.CreateResourceIdentifier(ResourceSuffixPolicyBuilder.Name);
+            this.policyDefinition = this.parent is SubscriptionResource
+                ? SubscriptionPolicyDefinitionResource.CreateResourceIdentifier(this.parent.Id, ResourceSuffixPolicyBuilder.Name)
+                : ManagementGroupPolicyDefinitionResource.CreateResourceIdentifier(this.parent.Id, ResourceSuffixPolicyBuilder.Name);
             this.specificPolicyParameters.Add("abbreviation", "suffix");
             return this;
         }
@@ -73,14 +86,15 @@ namespace Playground.Policies.Naming
 
                 if (element.TryGetProperty("hypenAllowed", out var withHypen) && withHypen.GetBoolean())
                 {
-                    abbreviation = policy.Name.Equals(ResourcePrefixPolicyBuilder.Name, StringComparison.OrdinalIgnoreCase)
+                    abbreviation = policy.ToString().Split('/').Last().Equals(ResourcePrefixPolicyBuilder.Name, StringComparison.OrdinalIgnoreCase)
                         ? $"{abbreviation}-"
                         : $"-{abbreviation}";
                 }
 
-                var reference = new PolicyDefinitionReference(policy!)
+                var policyId = this.EscapeMalformedSubscriptionResourceIdentifier(policy);
+                var reference = new PolicyDefinitionReference(policyId)
                 {
-                    PolicyDefinitionReferenceId = DeterministicGuid.Parse(policy!, abbreviation).ToString()
+                    PolicyDefinitionReferenceId = DeterministicGuid.Parse(policyId, abbreviation).ToString()
                 };
                 reference.Parameters.Add("providerNamespace", new ArmPolicyParameterValue
                 {
@@ -101,6 +115,11 @@ namespace Playground.Policies.Naming
 
                 yield return reference;
             }
+        }
+
+        private string EscapeMalformedSubscriptionResourceIdentifier(ResourceIdentifier resourceIdentifier)
+        {
+            return resourceIdentifier.ToString().Replace("/subscriptions//subscriptions", "/subscriptions");
         }
     }
 }

@@ -18,9 +18,9 @@ namespace Azure.ResourceManager.Resources.Models
         {
             writer.WriteStartObject();
             writer.WritePropertyName("field");
-            writer.WriteObjectValue(this.Field);
+            writer.WriteObjectValue(this.EspaceExperession(this.Field));
             writer.WritePropertyName("like");
-            writer.WriteObjectValue(this.Like);
+            writer.WriteObjectValue(this.EspaceExperession(this.Like));
             writer.WriteEndObject();
         }
     }

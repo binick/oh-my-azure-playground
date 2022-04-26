@@ -1,6 +1,7 @@
 ﻿// See the LICENSE.TXT file in the project root for full license information.
 
 using System.Text.Json;
+using Azure.Core;
 using JsonObject = System.Collections.Generic.IDictionary<string, object>;
 
 namespace Azure.ResourceManager.Resources.Models
@@ -8,6 +9,7 @@ namespace Azure.ResourceManager.Resources.Models
     public abstract class Resource : IUtf8JsonSerializable
     {
         private readonly JsonObject templateParameters;
+        private readonly ICollection<ResourceIdentifier> dependsOn;
 
         protected Resource(string type, string name, string apiVersion)
         {
@@ -27,6 +29,7 @@ namespace Azure.ResourceManager.Resources.Models
             }
 
             this.templateParameters = new Dictionary<string, object>();
+            this.dependsOn = new HashSet<ResourceIdentifier>();
 
             this.Type = type;
             this.Name = name;
@@ -42,6 +45,8 @@ namespace Azure.ResourceManager.Resources.Models
 
         public JsonObject AdditionalProperties { get; }
 
+        public IEnumerable<ResourceIdentifier> DependsOn => this.dependsOn;
+
         public IEnumerable<KeyValuePair<string, object>> GetTemplateParameters()
         {
             return this.templateParameters.AsEnumerable();
@@ -50,6 +55,11 @@ namespace Azure.ResourceManager.Resources.Models
         public void AddTemplateParameter(string name, object value)
         {
             this.templateParameters.Add(name, JsonSerializer.SerializeToElement(value));
+        }
+
+        public void AddDependency(ResourceIdentifier resourceId)
+        {
+            this.dependsOn.Add(resourceId);
         }
 
         public virtual void Write(Utf8JsonWriter writer)
@@ -67,7 +77,14 @@ namespace Azure.ResourceManager.Resources.Models
                 writer.WriteObjectValue(property.Value);
             }
 
+            writer.WritePropertyName("dependsOn");
+            writer.WriteObjectValue(this.DependsOn.Select(r => this.EscapeMalformedSubscriptionResourceIdentifier(r)));
             writer.WriteEndObject();
+        }
+
+        private string EscapeMalformedSubscriptionResourceIdentifier(ResourceIdentifier resourceIdentifier)
+        {
+            return resourceIdentifier.ToString().Replace("/subscriptions//subscriptions", "/subscriptions");
         }
     }
 }

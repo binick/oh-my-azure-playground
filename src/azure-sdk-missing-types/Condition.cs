@@ -8,11 +8,23 @@ namespace Azure.ResourceManager.Resources
     {
         protected Condition(string field)
         {
+            if (string.IsNullOrWhiteSpace(field))
+            {
+                throw new ArgumentException($"'{nameof(field)}' cannot be null or whitespace.", nameof(field));
+            }
+
             this.Field = field;
         }
 
         public string Field { get; }
 
         public abstract void Write(Utf8JsonWriter writer);
+
+        protected string EspaceExperession(string value)
+        {
+            return value.StartsWith('[') && value.EndsWith(']')
+                ? $"[{value}"
+                : value;
+        }
     }
 }
