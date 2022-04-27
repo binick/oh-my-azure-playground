@@ -21,7 +21,7 @@ namespace Playground.Tests
         {
             BinaryData binaryData = null!;
 
-            var exception = Record.Exception(() => binaryData = new ResourceSuffixPolicyBuilder().Build().ToBinaryData());
+            var exception = Record.Exception(() => binaryData = new ResourceSuffixPolicyBuilder(new FakeSubscriptionResource()).Build().ToBinaryData());
 
             Assert.Null(exception);
             this.output.WriteLine(binaryData.ToString());

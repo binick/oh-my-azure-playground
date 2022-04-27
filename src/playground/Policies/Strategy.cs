@@ -11,13 +11,14 @@ namespace Playground.Policies
 {
     public abstract class Strategy
     {
+        private readonly ArmResource scope;
         private readonly IEnumerable<Policy> policies;
         private readonly IEnumerable<Initiative> initiatives;
         private readonly IEnumerable<Assignment> assignments;
-        private ArmResource parent = null!;
 
-        protected Strategy(IReadOnlyCollection<Policy> policies, IReadOnlyCollection<Initiative> initiatives, IReadOnlyCollection<Assignment> assignments)
+        protected Strategy(ArmResource scope, IReadOnlyCollection<Policy> policies, IReadOnlyCollection<Initiative> initiatives, IReadOnlyCollection<Assignment> assignments)
         {
+            this.scope = scope;
             this.policies = policies;
             this.initiatives = initiatives;
             this.assignments = assignments;
@@ -29,38 +30,60 @@ namespace Playground.Policies
 
         public IEnumerable<Assignment> Assignments => this.assignments;
 
-        public async Task DeployAsync(SubscriptionResource subscription, CancellationToken cancellationToken = default)
-        {
-            this.parent = subscription;
-            await this.InternalDeployAsync(subscription.GetArmDeployments(), cancellationToken);
-        }
-
-        public async Task DeployAsync(ManagementGroupResource managementGroup, CancellationToken cancellationToken = default)
-        {
-            this.parent = managementGroup;
-            await this.InternalDeployAsync(managementGroup.GetArmDeployments(), cancellationToken);
-        }
-
-        private async Task InternalDeployAsync(ArmDeploymentCollection deployments, CancellationToken cancellationToken = default)
+        public DeploymentTemplateData ToSubscriptionDeployment()
         {
             // For the moment we approximate that all initiative depends from all policies and all assignments depends from all initiatives.
             foreach (var assignment in this.assignments)
             {
                 foreach (var initiative in this.initiatives)
                 {
-                    assignment.AddDependency(this.parent is SubscriptionResource
-                        ? SubscriptionPolicySetDefinitionResource.CreateResourceIdentifier(this.parent.Id, initiative.Name)
-                        : ManagementGroupPolicySetDefinitionResource.CreateResourceIdentifier(this.parent.Id, initiative.Name));
+                    assignment.AddDependency(this.scope is SubscriptionResource
+                        ? SubscriptionPolicySetDefinitionResource.CreateResourceIdentifier(this.scope.Id, initiative.Name)
+                        : ManagementGroupPolicySetDefinitionResource.CreateResourceIdentifier(this.scope.Id, initiative.Name));
 
                     foreach (var policyName in this.policies.Select(p => p.Name))
                     {
-                        initiative.AddDependency(this.parent is SubscriptionResource
-                            ? SubscriptionPolicyDefinitionResource.CreateResourceIdentifier(this.parent.Id, policyName)
-                            : ManagementGroupPolicyDefinitionResource.CreateResourceIdentifier(this.parent.Id, policyName));
+                        initiative.AddDependency(this.scope is SubscriptionResource
+                            ? SubscriptionPolicyDefinitionResource.CreateResourceIdentifier(this.scope.Id, policyName)
+                            : ManagementGroupPolicyDefinitionResource.CreateResourceIdentifier(this.scope.Id, policyName));
                     }
                 }
             }
 
+            return new SubscriptionDeploymentTemplateData(((IEnumerable<Resource>)this.Policies)
+                .Concat(this.initiatives)
+                .Concat(this.assignments)
+                .ToArray());
+        }
+
+        public DeploymentTemplateData ToManagementGroupDeployment()
+        {
+            // For the moment we approximate that all initiative depends from all policies and all assignments depends from all initiatives.
+            foreach (var assignment in this.assignments)
+            {
+                foreach (var initiative in this.initiatives)
+                {
+                    assignment.AddDependency(this.scope is SubscriptionResource
+                        ? SubscriptionPolicySetDefinitionResource.CreateResourceIdentifier(this.scope.Id, initiative.Name)
+                        : ManagementGroupPolicySetDefinitionResource.CreateResourceIdentifier(this.scope.Id, initiative.Name));
+
+                    foreach (var policyName in this.policies.Select(p => p.Name))
+                    {
+                        initiative.AddDependency(this.scope is SubscriptionResource
+                            ? SubscriptionPolicyDefinitionResource.CreateResourceIdentifier(this.scope.Id, policyName)
+                            : ManagementGroupPolicyDefinitionResource.CreateResourceIdentifier(this.scope.Id, policyName));
+                    }
+                }
+            }
+
+            return new ManagementGroupDeploymentData(((IEnumerable<Resource>)this.Policies)
+                .Concat(this.initiatives)
+                .Concat(this.assignments)
+                .ToArray());
+        }
+
+        private async Task InternalDeployAsync(ArmDeploymentCollection deployments, CancellationToken cancellationToken = default)
+        {
             var template = new SubscriptionDeploymentTemplateData(((IEnumerable<Resource>)this.Policies)
                 .Concat(this.initiatives)
                 .Concat(this.assignments)

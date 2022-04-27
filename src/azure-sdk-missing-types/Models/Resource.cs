@@ -6,7 +6,7 @@ using JsonObject = System.Collections.Generic.IDictionary<string, object>;
 
 namespace Azure.ResourceManager.Resources.Models
 {
-    public abstract class Resource : IUtf8JsonSerializable
+    public abstract class Resource : ArmResource, IUtf8JsonSerializable
     {
         private readonly JsonObject templateParameters;
         private readonly ICollection<ResourceIdentifier> dependsOn;

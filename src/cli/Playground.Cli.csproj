@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -10,12 +10,17 @@
 
   <ItemGroup>
     <PackageReference Include="Azure.Identity" Version="$(AzureIdentityVersion)" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="$(MicrosoftExtensionsDependencyInjectionVersion)" />
     <PackageReference Include="Spectre.Console" Version="$(SpectreConsoleVersion)" />
     <PackageReference Include="Spectre.Console.Analyzer" Version="$(SpectreConsoleAnalyzerVersion)" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\playground\Playground.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Playground.Cli.Tests"/>
   </ItemGroup>
 
 </Project>

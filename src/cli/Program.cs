@@ -1,11 +1,14 @@
 ﻿// See the LICENSE.TXT file in the project root for full license information.
 
-using Azure;
+using Azure.Core;
 using Azure.Identity;
 using Azure.ResourceManager;
-using Azure.ResourceManager.Resources;
-using Azure.ResourceManager.Resources.Models;
-using Playground.Policies.Naming;
+using Microsoft.Extensions.DependencyInjection;
+using Playground.Cli.Commands.Strategy;
+using Playground.Cli.Commands.Strategy.ManagementGroupScope;
+using Playground.Cli.Infrastructure;
+using Spectre.Console;
+using Spectre.Console.Cli;
 
 namespace Playground.Cli
 {
@@ -13,27 +16,30 @@ namespace Playground.Cli
     {
         public static async Task Main(string[] args)
         {
-            var client = new ArmClient(new InteractiveBrowserCredential());
-            var subscription = await client.GetDefaultSubscriptionAsync();
+            var services = new ServiceCollection();
+            services.AddSingleton<TokenCredential, DefaultAzureCredential>();
+            services.AddSingleton<IStore, FileStore>();
+            services.AddSingleton<ArmClient>();
+            services.AddSingleton(s => new AssemblyScanner(AppDomain.CurrentDomain.GetAssemblies(), s));
 
-            // DeleteAllForSub(subscription);
-            await new ResourceNamingStrategyBuilder(subscription).Build().DeployAsync(subscription);
-        }
-
-        private static void DeleteAllForSub(SubscriptionResource subscription)
-        {
-            var policyCollection = subscription.GetSubscriptionPolicyDefinitions();
-            var policies = policyCollection.Where(p => p.Data.PolicyType.Value.Equals(PolicyType.Custom));
-            var assignments = subscription.GetPolicyAssignments();
-
-            foreach (var policy in policies)
+            var app = new CommandApp(new TypeRegistrar(services));
+            app.Configure(configurator =>
             {
-                foreach (var assignemnt in assignments.Where(a => a.Data.PolicyDefinitionId.Equals(policy.Data.Id)))
+                configurator.AddBranch<NamingStrategySettings>("naming", compose =>
                 {
-                    assignemnt.Delete(WaitUntil.Completed);
-                }
+                    compose.AddCommand<OutputManagementGroupScopeNamingStrategyCommand>("management-group");
 
-                policy.Delete(WaitUntil.Completed);
+                    compose.AddCommand<OutputSubscriptionScopeNamingStrategyCommand>("subscription");
+                });
+            });
+
+            try
+            {
+                await app.RunAsync(args);
+            }
+            catch (Exception e)
+            {
+                AnsiConsole.WriteException(e);
             }
         }
     }

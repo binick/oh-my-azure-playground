@@ -9,6 +9,7 @@ namespace Playground.Tests
     {
         public DummyPolicy()
             : base(
+                  new FakeSubscriptionResource(),
                   "Dummy",
                   "Dummy testing policy",
                   "Dummy policy for testing",
@@ -26,6 +27,7 @@ namespace Playground.Tests
 
         public DummyPolicy(PolicyRule policyRule)
             : base(
+                  new FakeSubscriptionResource(),
                   "Dummy",
                   "Dummy testing policy",
                   "Dummy policy for testing",

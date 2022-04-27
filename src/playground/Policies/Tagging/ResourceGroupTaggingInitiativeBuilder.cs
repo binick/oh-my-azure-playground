@@ -1,6 +1,7 @@
 ﻿// See the LICENSE.TXT file in the project root for full license information.
 
 using System.Collections.ObjectModel;
+using Azure.ResourceManager;
 using Azure.ResourceManager.Resources;
 using Azure.ResourceManager.Resources.Models;
 
@@ -16,7 +17,8 @@ namespace Playground.Policies.Tagging
         private bool useOtherCommonTags = false;
         private IEnumerable<KeyValuePair<string, string>> tags;
 
-        public ResourceGroupTaggingInitiativeBuilder()
+        public ResourceGroupTaggingInitiativeBuilder(ArmResource scope)
+            : base(scope)
         {
             this.tags = new Collection<KeyValuePair<string, string>>();
         }
@@ -108,6 +110,7 @@ namespace Playground.Policies.Tagging
             }
 
             return new Initiative(
+                this.Scope,
                 ResourceGroupTaggingInitiativeBuilder.Name,
                 ResourceGroupTaggingInitiativeBuilder.DispayName,
                 ResourceGroupTaggingInitiativeBuilder.Description,

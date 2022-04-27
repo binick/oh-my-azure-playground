@@ -1,6 +1,7 @@
 ﻿// See the LICENSE.TXT file in the project root for full license information.
 
 using Azure.Core;
+using Azure.ResourceManager;
 
 namespace Playground.Policies.Locating
 {
@@ -9,7 +10,8 @@ namespace Playground.Policies.Locating
         private AzureLocation[] locations = null!;
         private bool strictMode = false;
 
-        public ResourceLocatingStrategyBuilder()
+        public ResourceLocatingStrategyBuilder(ArmResource scope)
+            : base(scope)
         {
         }
 
@@ -27,7 +29,7 @@ namespace Playground.Policies.Locating
 
         public override Strategy Build()
         {
-            return new ResourceLocatingStrategy(this.EnforcementMode, this.strictMode, this.locations);
+            return new ResourceLocatingStrategy(this.Scope, this.EnforcementMode, this.strictMode, this.locations);
         }
     }
 }

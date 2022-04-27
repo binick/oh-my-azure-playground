@@ -1,5 +1,6 @@
 ﻿// See the LICENSE.TXT file in the project root for full license information.
 
+using Azure.ResourceManager;
 using Azure.ResourceManager.Resources.Models;
 
 namespace Playground.Policies
@@ -10,12 +11,13 @@ namespace Playground.Policies
         private readonly ICollection<Initiative> initiatives;
         private readonly ICollection<Assignment> assignments;
 
-        protected StrategyBuilder()
+        protected StrategyBuilder(ArmResource scope)
         {
             this.policies = new HashSet<Policy>();
             this.initiatives = new HashSet<Initiative>();
             this.assignments = new HashSet<Assignment>();
             this.EnforcementMode = EnforcementMode.DoNotEnforce;
+            this.Scope = scope;
         }
 
         protected IEnumerable<Policy> Policies => this.policies;
@@ -25,6 +27,8 @@ namespace Playground.Policies
         protected IEnumerable<Assignment> Assignments => this.assignments;
 
         protected EnforcementMode EnforcementMode { get; private set; }
+
+        protected ArmResource Scope { get; }
 
         public abstract Strategy Build();
 

@@ -1,5 +1,6 @@
 ﻿// See the LICENSE.TXT file in the project root for full license information.
 
+using Azure.ResourceManager;
 using Azure.ResourceManager.Resources.Models;
 
 namespace Playground.Policies.Naming
@@ -10,13 +11,15 @@ namespace Playground.Policies.Naming
         public static readonly string DispayName = "Require a suffix on resources, resource groups and subscriptions.";
         public static readonly string Description = "Enforces existence of a suffix.";
 
-        public ResourceSuffixPolicyBuilder()
+        public ResourceSuffixPolicyBuilder(ArmResource scope)
+            : base(scope)
         {
         }
 
         public override Policy Build()
         {
             var policy = new Policy(
+                this.Scope,
                 ResourceSuffixPolicyBuilder.Name,
                 ResourceSuffixPolicyBuilder.DispayName,
                 ResourceSuffixPolicyBuilder.Description,

@@ -1,6 +1,6 @@
 ﻿// See the LICENSE.TXT file in the project root for full license information.
 
-using Azure.ResourceManager.Resources;
+using Azure.ResourceManager;
 using Azure.ResourceManager.Resources.Models;
 
 namespace Playground.Policies.Naming
@@ -8,18 +8,20 @@ namespace Playground.Policies.Naming
     public class ResourcePrefixPolicyBuilder : PolicyBuilder
     {
         public static readonly string Name = "policy-start-with-naming";
-        public static readonly string DispayName = "Require a prefix on resources, resource groups and subscriptions.";
+        public static readonly string DisplayName = "Require a prefix on resources, resource groups and subscriptions.";
         public static readonly string Description = "Enforces existence of a prefix.";
 
-        public ResourcePrefixPolicyBuilder()
+        public ResourcePrefixPolicyBuilder(ArmResource scope)
+            : base(scope)
         {
         }
 
         public override Policy Build()
         {
             var policy = new Policy(
+                this.Scope,
                 ResourcePrefixPolicyBuilder.Name,
-                ResourcePrefixPolicyBuilder.DispayName,
+                ResourcePrefixPolicyBuilder.DisplayName,
                 ResourcePrefixPolicyBuilder.Description,
                 new PolicyMetadata("General", "0.1.0", true, false),
                 new PolicyRule(

@@ -1,6 +1,7 @@
 ﻿// See the LICENSE.TXT file in the project root for full license information.
 
 using System.Text.Json;
+using Azure.ResourceManager;
 using Azure.ResourceManager.Resources;
 using Azure.ResourceManager.Resources.Models;
 
@@ -8,7 +9,7 @@ namespace Playground.Policies
 {
     public class Initiative : Resource<PolicySetDefinitionData>
     {
-        public Initiative(string name, string displayName, string description, PolicyMetadata metadata, PolicyDefinitionReference policyDefinition, params PolicyDefinitionReference[] otherPolicyDefinitions)
+        public Initiative(ArmResource scope, string name, string displayName, string description, PolicyMetadata metadata, PolicyDefinitionReference policyDefinition, params PolicyDefinitionReference[] otherPolicyDefinitions)
             : base("Microsoft.Authorization/policySetDefinitions", name, "2021-06-01")
         {
             this.Properties.PolicyType = PolicyType.Custom;
@@ -20,6 +21,10 @@ namespace Playground.Policies
             {
                 this.Properties.PolicyDefinitions.Add(definition);
             }
+
+            this.Scope = scope;
         }
+
+        public ArmResource Scope { get; }
     }
 }

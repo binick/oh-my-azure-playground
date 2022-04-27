@@ -7,6 +7,7 @@
     <AzureResourceManagerResourcesVersion>1.*</AzureResourceManagerResourcesVersion>
     <AzureIdentityVersion>1.*</AzureIdentityVersion>
     <AzureBicepCoreVersion>0.*</AzureBicepCoreVersion>
+    <MicrosoftExtensionsDependencyInjectionVersion>6.*</MicrosoftExtensionsDependencyInjectionVersion>
   </PropertyGroup>
 
 </Project>

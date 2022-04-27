@@ -16,18 +16,17 @@ namespace Playground.Policies.Naming
         public static readonly string Description = "This policy enforce a standard naming for resources";
 
         private readonly IDictionary<string, string> specificPolicyParameters;
-        private readonly ArmResource parent;
         private ResourceIdentifier policyDefinition = null!;
 
-        public ResourceNamingInitiativeBuilder(ArmResource parent)
+        public ResourceNamingInitiativeBuilder(ArmResource scope)
+            : base(scope)
         {
-            if (parent is not SubscriptionResource or ManagementGroupResource)
+            if (scope is not SubscriptionResource or ManagementGroupResource)
             {
-                throw new InvalidOperationException(nameof(parent));
+                throw new InvalidOperationException(nameof(scope));
             }
 
             this.specificPolicyParameters = new Dictionary<string, string>();
-            this.parent = parent;
         }
 
         public ResourceNamingInitiativeBuilder UsePrefix()
@@ -37,9 +36,9 @@ namespace Playground.Policies.Naming
                 throw new InvalidOperationException();
             }
 
-            this.policyDefinition = this.parent is SubscriptionResource
-                ? SubscriptionPolicyDefinitionResource.CreateResourceIdentifier(this.parent.Id, ResourcePrefixPolicyBuilder.Name)
-                : ManagementGroupPolicyDefinitionResource.CreateResourceIdentifier(this.parent.Id, ResourcePrefixPolicyBuilder.Name);
+            this.policyDefinition = this.Scope is SubscriptionResource
+                ? SubscriptionPolicyDefinitionResource.CreateResourceIdentifier(this.Scope.Id, ResourcePrefixPolicyBuilder.Name)
+                : ManagementGroupPolicyDefinitionResource.CreateResourceIdentifier(this.Scope.Id, ResourcePrefixPolicyBuilder.Name);
             this.specificPolicyParameters.Add("abbreviation", "prefix");
             return this;
         }
@@ -51,9 +50,9 @@ namespace Playground.Policies.Naming
                 throw new InvalidOperationException();
             }
 
-            this.policyDefinition = this.parent is SubscriptionResource
-                ? SubscriptionPolicyDefinitionResource.CreateResourceIdentifier(this.parent.Id, ResourceSuffixPolicyBuilder.Name)
-                : ManagementGroupPolicyDefinitionResource.CreateResourceIdentifier(this.parent.Id, ResourceSuffixPolicyBuilder.Name);
+            this.policyDefinition = this.Scope is SubscriptionResource
+                ? SubscriptionPolicyDefinitionResource.CreateResourceIdentifier(this.Scope.Id, ResourceSuffixPolicyBuilder.Name)
+                : ManagementGroupPolicyDefinitionResource.CreateResourceIdentifier(this.Scope.Id, ResourceSuffixPolicyBuilder.Name);
             this.specificPolicyParameters.Add("abbreviation", "suffix");
             return this;
         }
@@ -70,6 +69,7 @@ namespace Playground.Policies.Naming
             var policyCollection = this.ParsePolicySetDefinition(json, this.policyDefinition!);
 
             return new Initiative(
+                this.Scope,
                 Name,
                 DispayName,
                 Description,
