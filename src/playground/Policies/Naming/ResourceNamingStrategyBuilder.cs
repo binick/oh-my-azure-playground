@@ -65,7 +65,6 @@ namespace Playground.Policies.Naming
                     this.resourceNamingInitiativeBuilder.Build(),
                     this.EnforcementMode);
             }
-
         }
     }
 }

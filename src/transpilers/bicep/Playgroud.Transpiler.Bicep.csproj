@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Bicep.Core" Version="0.4.1318" />
+    <PackageReference Include="Azure.Bicep.Core" Version="$(AzureBicepCoreVersion)" />
   </ItemGroup>
 
   <ItemGroup>

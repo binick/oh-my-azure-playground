@@ -18,18 +18,19 @@ namespace Playground.Tests
         }
 
         [Theory]
-        [InlineData("type", "[concat(parameters('providerNamespace'), '/', parameters('entity'))]")]
-        public void ShouldBeFormattedAsExpected(string expectedField, string expectedValue)
+        [InlineData("type", "sample", "type", "sample")]
+        [InlineData("type", "[expressions]", "type", "[[expressions]")]
+        public void ShouldBeFormattedAsExpected(string field, string value, string expectedField, string excpectedValue)
         {
             BinaryData binaryData = null!;
 
-            var exception = Record.Exception(() => binaryData = new PolicyRuleEqualsCondition(expectedField, expectedValue).ToBinaryData());
+            var exception = Record.Exception(() => binaryData = new PolicyRuleEqualsCondition(field, value).ToBinaryData());
 
             Assert.Null(exception);
 
             var json = JsonDocument.Parse(binaryData).RootElement;
             Assert.Equal(expectedField, json.GetProperty("field").ToString());
-            Assert.Equal(expectedValue, json.GetProperty("equals").ToString());
+            Assert.Equal(excpectedValue, json.GetProperty("equals").ToString());
         }
     }
 }

@@ -1,12 +1,9 @@
 ﻿// See the LICENSE.TXT file in the project root for full license information.
 
-using System.Text;
-using System.Text.Json;
 using Azure;
 using Azure.Core;
 using Azure.ResourceManager;
 using Azure.ResourceManager.ManagementGroups;
-using Azure.ResourceManager.Models;
 using Azure.ResourceManager.Resources;
 using Azure.ResourceManager.Resources.Models;
 
@@ -17,7 +14,7 @@ namespace Playground.Policies
         private readonly IEnumerable<Policy> policies;
         private readonly IEnumerable<Initiative> initiatives;
         private readonly IEnumerable<Assignment> assignments;
-        private ArmResource parent;
+        private ArmResource parent = null!;
 
         protected Strategy(IReadOnlyCollection<Policy> policies, IReadOnlyCollection<Initiative> initiatives, IReadOnlyCollection<Assignment> assignments)
         {

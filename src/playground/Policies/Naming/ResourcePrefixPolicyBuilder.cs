@@ -76,7 +76,6 @@ namespace Playground.Policies.Naming
             // Todo: seems the allowed values cause a serialization exception.
             // effectDefinition.AllowedValues.Add(BinaryData.FromString(PolicyRuleEffect.Audit));
             // effectDefinition.AllowedValues.Add(BinaryData.FromString(PolicyRuleEffect.Deny));
-
             policy.Properties.Parameters.Add(key: "effect", value: effectDefinition);
 
             return policy;

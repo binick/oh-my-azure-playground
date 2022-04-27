@@ -1,5 +1,6 @@
 ﻿// See the LICENSE.TXT file in the project root for full license information.
 
+using Azure.ResourceManager;
 using Azure.ResourceManager.Resources;
 using Playground.Policies.Naming;
 using Xunit;
@@ -21,7 +22,7 @@ namespace Playground.Tests
         {
             BinaryData binaryData = null!;
 
-            var exception = Record.Exception(() => binaryData = new ResourceNamingInitiativeBuilder().Build().ToBinaryData());
+            var exception = Record.Exception(() => binaryData = new ResourceNamingInitiativeBuilder(new DummySubscriptionResource()).Build().ToBinaryData());
 
             Assert.Null(exception);
             this.output.WriteLine(binaryData.ToString());

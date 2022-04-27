@@ -20,7 +20,7 @@ namespace Playground.Tests
         [Theory]
         [InlineData("Test", "0.1.0", true, true)]
         [InlineData("Test2", "1.0.0", false, false)]
-        public async Task ShouldBeFormattedAsExpected(string expectedCategory, string expectedVersion, bool expectedIsPreview, bool expectedIsDeprecated)
+        public void ShouldBeFormattedAsExpected(string expectedCategory, string expectedVersion, bool expectedIsPreview, bool expectedIsDeprecated)
         {
             BinaryData binaryData = null!;
 
