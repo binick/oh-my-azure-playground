@@ -1,0 +1,2436 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "subscriptionId": {
+      "type": "string",
+      "metadata": {
+        "description": "The subscription id where you would apply the naming strategy"
+      }
+    }
+  },
+  "resources": [
+      {
+          "type": "Microsoft.Authorization/policyDefinitions",
+          "apiVersion": "2021-06-01",
+          "name": "policy-start-with-naming",
+          "dependsOn": [],
+          "properties": {
+              "policyType": "Custom",
+              "mode": "All",
+              "displayName": "[Preview]: Require a prefix on resources, resource groups and subscriptions.",
+              "description": "Enforces existence of a prefix.",
+              "policyRule": {
+                  "if": {
+                      "allOf": [
+                          {
+                              "field": "type",
+                              "equals": "[[concat(parameters('providerNamespace'), '/', parameters('entity'))]"
+                          },
+                          {
+                              "field": "name",
+                              "equals": "[[concat(parameters('prefix'), '*')]"
+                          }
+                      ]
+                  },
+                  "then": {
+                      "effect": "[[parameters('effect')]"
+                  }
+              },
+              "metadata": {
+                  "category": "General",
+                  "version": "0.1.0",
+                  "preview": true,
+                  "deprecated": false
+              },
+              "parameters": {
+                  "providerNamespace": {
+                      "type": "String",
+                      "metadata": {
+                          "displayName": "Resource provider namespace",
+                          "description": "Identify the ARM resource provider"
+                      }
+                  },
+                  "entity": {
+                      "type": "String",
+                      "metadata": {
+                          "displayName": "Entity",
+                          "description": "Name of the ARM entity"
+                      }
+                  },
+                  "prefix": {
+                      "type": "String",
+                      "metadata": {
+                          "displayName": "Prefix",
+                          "description": "Prefix that the resource must have, such as 'app-'"
+                      }
+                  },
+                  "effect": {
+                      "type": "String",
+                      "metadata": {
+                          "displayName": "Effect",
+                          "description": "Enable or disable the execution of the policy"
+                      }
+                  }
+              }
+          }
+      },
+      {
+          "type": "Microsoft.Authorization/policySetDefinitions",
+          "apiVersion": "2021-06-01",
+          "name": "policy-resource-naming-initiative",
+          "dependsOn": [
+              "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]"
+          ],
+          "properties": {
+              "policyType": "Custom",
+              "displayName": "[Preview]: Resources should be named correctly",
+              "description": "This policy enforce a standard naming for resources",
+              "metadata": {
+                  "category": "General",
+                  "version": "0.1.0",
+                  "preview": true,
+                  "deprecated": false
+              },
+              "policyDefinitions": [
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.ApiManagement"
+                          },
+                          "entity": {
+                              "value": "service"
+                          },
+                          "prefix": {
+                              "value": "apim-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "5b782f4a-7eb9-dfb2-73e2-105a3fe22e3a"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.ManagedIdentity"
+                          },
+                          "entity": {
+                              "value": "userAssignedIdentities"
+                          },
+                          "prefix": {
+                              "value": "id-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "641648a0-a78a-2922-1ad1-d4a2310f417d"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Management"
+                          },
+                          "entity": {
+                              "value": "managementGroups"
+                          },
+                          "prefix": {
+                              "value": "mg-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "d968cf82-5ced-e1ef-63d6-847b9f91ac77"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Authorization"
+                          },
+                          "entity": {
+                              "value": "policyDefinitions"
+                          },
+                          "prefix": {
+                              "value": "policy-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "1be1b496-5165-7b55-8e08-b01a4a80c8e7"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Resources"
+                          },
+                          "entity": {
+                              "value": "resourceGroups"
+                          },
+                          "prefix": {
+                              "value": "rg-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "1e06d17e-3a08-5289-2d32-09264cf066a7"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "applicationGateways"
+                          },
+                          "prefix": {
+                              "value": "agw-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "3eddc728-2405-15b8-ce44-5cd5c1c0caa3"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "applicationSecurityGroups"
+                          },
+                          "prefix": {
+                              "value": "asg-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "7b357139-39a2-a4a0-0248-f4b2f13a749e"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "bastionHosts"
+                          },
+                          "prefix": {
+                              "value": "bas-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "c03f7833-91fd-f18e-654d-ed10e79d43a5"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Cdn"
+                          },
+                          "entity": {
+                              "value": "profiles"
+                          },
+                          "prefix": {
+                              "value": "cdnp-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "42da916b-b030-36a4-5238-84fb66c19d7c"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Cdn"
+                          },
+                          "entity": {
+                              "value": "profiles/endpoints"
+                          },
+                          "prefix": {
+                              "value": "cdne-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "217bf23e-e2f3-52ce-a692-662ca30c29be"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "connections"
+                          },
+                          "prefix": {
+                              "value": "con-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "0cb38a08-ac1f-ae2a-2784-6d8fafffa2d8"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "dnsZones"
+                          },
+                          "prefix": {
+                              "value": "dnsz-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "ed05c0b2-8ccc-d6b1-a21f-4b024ef4b075"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "privateDnsZones"
+                          },
+                          "prefix": {
+                              "value": "pdnsz-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "e508d01a-9b8c-bcd3-c01a-7e8114f9755e"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "azureFirewalls"
+                          },
+                          "prefix": {
+                              "value": "afw-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "70e92904-4f30-8946-5503-6f24443751d1"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "firewallPolicies"
+                          },
+                          "prefix": {
+                              "value": "afwp-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "8009af58-42cc-e410-a2f7-448e5db5a200"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "expressRouteCircuits"
+                          },
+                          "prefix": {
+                              "value": "erc-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "4ebae0ef-23d9-c71c-8d01-d09fe86898eb"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "frontDoors"
+                          },
+                          "prefix": {
+                              "value": "fd-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "ad6a7ec0-c975-9905-34e6-eda478fa4aa4"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "frontdoorWebApplicationFirewallPolicies"
+                          },
+                          "prefix": {
+                              "value": "fdfp-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "23b8a805-7eb7-fe63-c516-c504b09e115f"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "loadBalancers"
+                          },
+                          "prefix": {
+                              "value": "lbi-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "3511a8f8-2a77-a8ed-7d3a-6ee4df329d08"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "loadBalancers"
+                          },
+                          "prefix": {
+                              "value": "lbe-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "31ee4ccb-3e2c-9cf8-e8b6-fc75f683745f"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "loadBalancers/inboundNatRules"
+                          },
+                          "prefix": {
+                              "value": "rule-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "11a49f61-23fa-80ff-fc58-55847f44f7ea"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "localNetworkGateways"
+                          },
+                          "prefix": {
+                              "value": "lgw-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "ed8ad576-73dc-cdbe-e882-a635dda9e02f"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "natGateways"
+                          },
+                          "prefix": {
+                              "value": "ng"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "99422c6f-69df-c720-829f-c33f6246d1cb"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "networkInterfaces"
+                          },
+                          "prefix": {
+                              "value": "nic-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "a0d95263-aeed-0dd1-5366-badcc3d12658"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "networkSecurityGroups"
+                          },
+                          "prefix": {
+                              "value": "nsg-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "10ccefc6-8803-7fb9-1a65-c1cc38b94f24"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "networkSecurityGroups/securityRules"
+                          },
+                          "prefix": {
+                              "value": "nsgsr-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "53093a4f-a123-12bc-1289-73f375d1b249"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "networkWatchers"
+                          },
+                          "prefix": {
+                              "value": "nw-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "d2266298-4475-a146-9cd7-4afdfdef938e"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "privateLinkServices"
+                          },
+                          "prefix": {
+                              "value": "pl-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "a2656ae2-5d15-885a-0c86-0db21bfd5088"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "publicIPAddresses"
+                          },
+                          "prefix": {
+                              "value": "pip-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "6948ae66-9c5a-af05-6f68-777428f4b3a4"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "publicIPabbreviationes"
+                          },
+                          "prefix": {
+                              "value": "ippre-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "2f64bfb4-ea41-4a56-f5c9-d11b691f4f91"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "routeFilters"
+                          },
+                          "prefix": {
+                              "value": "rf-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "187359de-1993-7c8a-cd39-529653b824a7"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "routeTables"
+                          },
+                          "prefix": {
+                              "value": "rt-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "8a633d27-c518-f62f-9783-9145904cfa9b"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "serviceEndPointPolicies"
+                          },
+                          "prefix": {
+                              "value": "se-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "215ab2ea-c0a1-9c08-2311-4a78b33a4ac2"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "trafficManagerProfiles"
+                          },
+                          "prefix": {
+                              "value": "traf-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "3916b607-d953-18be-b5b7-ca4b012a6d04"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "routeTables/routes"
+                          },
+                          "prefix": {
+                              "value": "udr-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "5c3d73be-de18-39df-f45f-f9b61dd74aec"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "virtualNetworks"
+                          },
+                          "prefix": {
+                              "value": "vnet-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "5580199d-9b2c-d7f3-c0a3-b1edb3dee5ec"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "virtualNetworks/virtualNetworkPeerings"
+                          },
+                          "prefix": {
+                              "value": "peer-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "3b473dfc-f3a0-87b0-d8b6-5a8d9bdeaebf"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "virtualNetworks/subnets"
+                          },
+                          "prefix": {
+                              "value": "snet-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "d66a49f7-7a39-ac38-c2f4-da85a32901b1"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "virtualWans"
+                          },
+                          "prefix": {
+                              "value": "vwan-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "ddbf68f9-b01d-0a0d-13c0-af615991e226"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "vpnGateways"
+                          },
+                          "prefix": {
+                              "value": "vpng-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "17449566-a68b-e06c-87eb-106a01f94e80"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "vpnGateways/vpnConnections"
+                          },
+                          "prefix": {
+                              "value": "vcn-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "f1cb6012-6909-5c9c-2d59-6b4392fe561c"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "vpnGateways/vpnSites"
+                          },
+                          "prefix": {
+                              "value": "vst-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "3a3b8054-2915-d75e-619f-713bd1dcf1ba"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "virtualNetworkGateways"
+                          },
+                          "prefix": {
+                              "value": "vgw-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "b1481274-11aa-0249-3f9b-6a508d487771"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "firewallPolicies"
+                          },
+                          "prefix": {
+                              "value": "waf"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "05167d47-2963-2240-bd83-dc18ce5dd5f7"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Network"
+                          },
+                          "entity": {
+                              "value": "firewallPolicies/ruleGroups"
+                          },
+                          "prefix": {
+                              "value": "wafrg"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "8158df5c-56a1-ac21-62ba-eaf53f34e195"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Web"
+                          },
+                          "entity": {
+                              "value": "sites"
+                          },
+                          "prefix": {
+                              "value": "ase-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "0a1ef177-916e-2d7d-39e7-3fd50cedeab4"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Web"
+                          },
+                          "entity": {
+                              "value": "serverFarms"
+                          },
+                          "prefix": {
+                              "value": "plan-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "f6518cf7-78a2-8918-cfa9-61f40c5d7620"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Compute"
+                          },
+                          "entity": {
+                              "value": "availabilitySets"
+                          },
+                          "prefix": {
+                              "value": "avail-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "91e6d5ae-3a22-74f0-529f-72570390d6c2"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.HybridCompute"
+                          },
+                          "entity": {
+                              "value": "machines"
+                          },
+                          "prefix": {
+                              "value": "arcs-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "715bf507-bff3-8016-09b4-584d6fd35ba8"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Kubernetes"
+                          },
+                          "entity": {
+                              "value": "connectedClusters"
+                          },
+                          "prefix": {
+                              "value": "arck"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "c719429e-60fa-cb73-82eb-31a394df6d91"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Compute"
+                          },
+                          "entity": {
+                              "value": "cloudServices"
+                          },
+                          "prefix": {
+                              "value": "cld-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "3bdda4d1-95d1-10b9-3037-f685735b518a"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Compute"
+                          },
+                          "entity": {
+                              "value": "diskEncryptionSets"
+                          },
+                          "prefix": {
+                              "value": "des"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "28ced395-d2a0-3202-6586-0bd025f6d3fb"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Web"
+                          },
+                          "entity": {
+                              "value": "sites"
+                          },
+                          "prefix": {
+                              "value": "func-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "d3d29fc5-1060-5bd8-86d3-f31cb886d365"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Compute"
+                          },
+                          "entity": {
+                              "value": "galleries"
+                          },
+                          "prefix": {
+                              "value": "gal"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "6a895e79-14ab-8c36-a6e7-81b3d57b4a81"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Compute"
+                          },
+                          "entity": {
+                              "value": "disks"
+                          },
+                          "prefix": {
+                              "value": "osdisk"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "826a611a-4e3e-0cc3-ad5d-3938b8b1e2c4"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Compute"
+                          },
+                          "entity": {
+                              "value": "disks"
+                          },
+                          "prefix": {
+                              "value": "disk"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "7b23e268-36fb-c056-ee28-6babc5e87fcc"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.NotificationHubs"
+                          },
+                          "entity": {
+                              "value": "namespaces/notificationHubs"
+                          },
+                          "prefix": {
+                              "value": "ntf-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "f1b5fe79-7571-1dae-81d9-91c9187aa8c7"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.NotificationHubs"
+                          },
+                          "entity": {
+                              "value": "namespaces"
+                          },
+                          "prefix": {
+                              "value": "ntfns-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "3a531072-f256-b47f-8b0b-988619be4aca"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Compute"
+                          },
+                          "entity": {
+                              "value": "snapshots"
+                          },
+                          "prefix": {
+                              "value": "snap-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "c75fb608-4660-f9e1-e218-abea02b07711"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Web"
+                          },
+                          "entity": {
+                              "value": "staticSites"
+                          },
+                          "prefix": {
+                              "value": "stapp-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "2047062d-02b1-1778-ed15-eabe27eab0fe"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Compute"
+                          },
+                          "entity": {
+                              "value": "virtualMachines"
+                          },
+                          "prefix": {
+                              "value": "vm"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "5c32df9f-a84c-52e1-8ca1-adaa3a016845"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Compute"
+                          },
+                          "entity": {
+                              "value": "virtualMachineScaleSets"
+                          },
+                          "prefix": {
+                              "value": "vmss-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "4d52266b-26a2-16a5-0fae-9fa82894e7da"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Web"
+                          },
+                          "entity": {
+                              "value": "sites"
+                          },
+                          "prefix": {
+                              "value": "app-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "eae34e2e-962a-4e75-9cb0-21747cc16c06"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.ContainerService"
+                          },
+                          "entity": {
+                              "value": "managedClusters"
+                          },
+                          "prefix": {
+                              "value": "aks-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "1c83d519-a40e-8828-8822-ccfc503ce200"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.ContainerService"
+                          },
+                          "entity": {
+                              "value": "registries"
+                          },
+                          "prefix": {
+                              "value": "cr"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "fd231fdf-32b9-27f6-9664-aef0bdace4d5"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.ContainerService"
+                          },
+                          "entity": {
+                              "value": "containerGroups"
+                          },
+                          "prefix": {
+                              "value": "ci"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "817dd4ee-aa6e-2a68-405c-12b1b2849cb3"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.ServiceFabric"
+                          },
+                          "entity": {
+                              "value": "clusters"
+                          },
+                          "prefix": {
+                              "value": "sf-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "4a7d9ac9-5874-5a14-1f3d-87d841b5852a"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.DocumentDB"
+                          },
+                          "entity": {
+                              "value": "databaseAccounts/sqlDatabases"
+                          },
+                          "prefix": {
+                              "value": "cosmos-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "ea3247c9-92ab-9d0a-ecdf-c8f0189b7b96"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Cache"
+                          },
+                          "entity": {
+                              "value": "Redis"
+                          },
+                          "prefix": {
+                              "value": "redis-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "68393013-3efb-6fa2-b13f-3f0826036298"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Sql"
+                          },
+                          "entity": {
+                              "value": "servers"
+                          },
+                          "prefix": {
+                              "value": "sql-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "7317328c-63db-2be9-7bce-553293a83d9c"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Sql"
+                          },
+                          "entity": {
+                              "value": "servers/databases"
+                          },
+                          "prefix": {
+                              "value": "sqldb-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "65b72e90-c7bb-b55e-1422-c9750020f1cf"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Synapse"
+                          },
+                          "entity": {
+                              "value": "workspaces"
+                          },
+                          "prefix": {
+                              "value": "syn"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "e63337aa-a739-b415-ff1b-d13794567231"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Synapse"
+                          },
+                          "entity": {
+                              "value": "workspaces"
+                          },
+                          "prefix": {
+                              "value": "synw"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "d531ed8e-2ac0-5ef6-2257-29cf24a40c91"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Synapse"
+                          },
+                          "entity": {
+                              "value": "workspaces/sqlPools"
+                          },
+                          "prefix": {
+                              "value": "syndp"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "b87c6e7a-d369-75da-ccb3-4893a565d5f8"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Synapse"
+                          },
+                          "entity": {
+                              "value": "workspaces/sqlPools"
+                          },
+                          "prefix": {
+                              "value": "synsp"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "28e7512b-06b8-987f-d0b5-ad7f71d93f39"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.DBforMySQL"
+                          },
+                          "entity": {
+                              "value": "servers"
+                          },
+                          "prefix": {
+                              "value": "mysql-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "1fc8c432-2017-c4ff-aad2-837ecc3e2158"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.DBforPostgreSQL"
+                          },
+                          "entity": {
+                              "value": "servers"
+                          },
+                          "prefix": {
+                              "value": "psql-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "d6dc94b6-0730-c0bc-0ec6-5c09f8b1ab24"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Sql"
+                          },
+                          "entity": {
+                              "value": "databases"
+                          },
+                          "prefix": {
+                              "value": "sqlstrdb-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "a2679a04-621a-6217-7106-e741687cda23"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Sql"
+                          },
+                          "entity": {
+                              "value": "managedInstances"
+                          },
+                          "prefix": {
+                              "value": "sqlmi-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "21add20a-8b2e-6d82-ff67-332ff657433a"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Storage"
+                          },
+                          "entity": {
+                              "value": "storageAccounts"
+                          },
+                          "prefix": {
+                              "value": "st"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "4fa955c8-12cd-1595-8c07-232414ac54ef"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.StorSimple"
+                          },
+                          "entity": {
+                              "value": "managers"
+                          },
+                          "prefix": {
+                              "value": "ssimp"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "e7cd6e8e-e976-f8a4-1d6c-b2d283f81605"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Search"
+                          },
+                          "entity": {
+                              "value": "searchServices"
+                          },
+                          "prefix": {
+                              "value": "srch-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "9415d243-dc41-b606-f209-02f585411977"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.CognitiveServices"
+                          },
+                          "entity": {
+                              "value": "accounts"
+                          },
+                          "prefix": {
+                              "value": "cog-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "7edb997e-53e2-807e-5e5e-112e49185788"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.MachineLearningServices"
+                          },
+                          "entity": {
+                              "value": "workspaces"
+                          },
+                          "prefix": {
+                              "value": "mlw-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "783c03fd-3d60-4ef1-912e-4482a0e50fb1"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.AnalysisServices"
+                          },
+                          "entity": {
+                              "value": "servers"
+                          },
+                          "prefix": {
+                              "value": "as"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "c70e204c-6d6e-2dde-11b9-af7011794a91"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Databricks"
+                          },
+                          "entity": {
+                              "value": "workspaces"
+                          },
+                          "prefix": {
+                              "value": "dbw-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "7a94f73a-04e3-b30a-6396-a9dea29917e7"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.StreamAnalytics"
+                          },
+                          "entity": {
+                              "value": "cluster"
+                          },
+                          "prefix": {
+                              "value": "asa-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "ab1cd425-09f8-1813-c1f6-94f3bee3eb87"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Kusto"
+                          },
+                          "entity": {
+                              "value": "clusters"
+                          },
+                          "prefix": {
+                              "value": "dec"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "72147e49-38a9-1066-955a-2ed71fc951db"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Kusto"
+                          },
+                          "entity": {
+                              "value": "clusters/databases"
+                          },
+                          "prefix": {
+                              "value": "dedb"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "e77bd0cf-910a-eee7-b1f0-f35a887424e3"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.DataFactory"
+                          },
+                          "entity": {
+                              "value": "factories"
+                          },
+                          "prefix": {
+                              "value": "adf-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "c33acf98-4916-2bb0-a9ca-13016a0c4577"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.DataLakeStore"
+                          },
+                          "entity": {
+                              "value": "accounts"
+                          },
+                          "prefix": {
+                              "value": "dls"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "686b8ec1-5b09-964d-8b29-117749b24c2e"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.DataLakeAnalytics"
+                          },
+                          "entity": {
+                              "value": "accounts"
+                          },
+                          "prefix": {
+                              "value": "dla"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "fab11365-413c-5ec0-3735-acb49783d3d6"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.EventHub"
+                          },
+                          "entity": {
+                              "value": "namespaces"
+                          },
+                          "prefix": {
+                              "value": "evhns-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "8689e4b3-6a41-ce0b-df7e-2053642847d3"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.EventHub"
+                          },
+                          "entity": {
+                              "value": "namespaces/eventHubs"
+                          },
+                          "prefix": {
+                              "value": "evh-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "d98a7c0d-e802-d303-d1dc-06b8a47f1136"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.EventGrid"
+                          },
+                          "entity": {
+                              "value": "domains"
+                          },
+                          "prefix": {
+                              "value": "evgd-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "fe10b9fa-39b8-c015-dd4b-5c147632b7c4"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.EventGrid"
+                          },
+                          "entity": {
+                              "value": "eventSubscriptions"
+                          },
+                          "prefix": {
+                              "value": "evgs-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "6167c0ed-d0aa-fad7-06ce-f230d3872c1a"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.EventGrid"
+                          },
+                          "entity": {
+                              "value": "domains/topics"
+                          },
+                          "prefix": {
+                              "value": "evgt-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "30935eac-1f00-b9b9-9d96-bef71905f65c"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.HDInsight"
+                          },
+                          "entity": {
+                              "value": "clusters"
+                          },
+                          "prefix": {
+                              "value": "hadoop-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "1fc4c500-6fb7-79cb-6625-c91145caee71"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.HDInsight"
+                          },
+                          "entity": {
+                              "value": "clusters"
+                          },
+                          "prefix": {
+                              "value": "hbase-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "f350dc77-be1b-656b-fb96-65c4482b14ec"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.HDInsight"
+                          },
+                          "entity": {
+                              "value": "clusters"
+                          },
+                          "prefix": {
+                              "value": "kafka-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "9e0c32b6-bf52-7c73-bdde-5e24bf136323"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.HDInsight"
+                          },
+                          "entity": {
+                              "value": "clusters"
+                          },
+                          "prefix": {
+                              "value": "spark-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "fb3a44a3-6a9e-63f3-19a3-d54509c80178"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.HDInsight"
+                          },
+                          "entity": {
+                              "value": "clusters"
+                          },
+                          "prefix": {
+                              "value": "storm-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "59f6cf23-b7da-98fd-dadf-0171f4a2932e"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.HDInsight"
+                          },
+                          "entity": {
+                              "value": "clusters"
+                          },
+                          "prefix": {
+                              "value": "mls-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "4d9d5025-2d58-8eef-9753-5b7593ec97f4"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Devices"
+                          },
+                          "entity": {
+                              "value": "IotHubs"
+                          },
+                          "prefix": {
+                              "value": "iot-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "81046b25-239b-9369-b310-d37d2ed7f20a"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Devices"
+                          },
+                          "entity": {
+                              "value": "provisioningServices"
+                          },
+                          "prefix": {
+                              "value": "provs-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "e1767bc8-9ebb-8777-7ef2-7db60edf3c1d"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Devices"
+                          },
+                          "entity": {
+                              "value": "provisioningServices/certificates"
+                          },
+                          "prefix": {
+                              "value": "pcert-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "13956cd7-5adf-0183-1b1c-3a1d51b94acc"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.PowerBIDedicated"
+                          },
+                          "entity": {
+                              "value": "capacities"
+                          },
+                          "prefix": {
+                              "value": "pbi-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "b7aae3a1-ee79-b512-1e2a-8ec015cc596d"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.TimeSeriesInsights"
+                          },
+                          "entity": {
+                              "value": "environments"
+                          },
+                          "prefix": {
+                              "value": "tsi-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "d420dfae-def8-0a8d-ee6a-0541c7a2034c"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.DesktopVirtualization"
+                          },
+                          "entity": {
+                              "value": "hostPools"
+                          },
+                          "prefix": {
+                              "value": "vdpool-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "fd03d858-aa9d-8a18-87e3-dddb6ffa24cb"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.DesktopVirtualization"
+                          },
+                          "entity": {
+                              "value": "applicationGroups"
+                          },
+                          "prefix": {
+                              "value": "vdag-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "5dfa555f-ccb5-f9a6-108b-44836a78b0d5"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.DesktopVirtualization"
+                          },
+                          "entity": {
+                              "value": "workspaces"
+                          },
+                          "prefix": {
+                              "value": "vdws-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "7ca52b9b-12ca-db15-7556-67b4f9d77de8"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.AppConfiguration"
+                          },
+                          "entity": {
+                              "value": "configurationStores"
+                          },
+                          "prefix": {
+                              "value": "appcs-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "75e20fae-f650-aab9-ebc9-49775a41e5df"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.SignalRService"
+                          },
+                          "entity": {
+                              "value": "SignalR"
+                          },
+                          "prefix": {
+                              "value": "sigr"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "6ba0ee84-7200-3139-6c96-c65956bf5dc7"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Logic"
+                          },
+                          "entity": {
+                              "value": "integrationAccounts"
+                          },
+                          "prefix": {
+                              "value": "ia-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "604783d5-cde3-7322-4615-ea2fccf075b5"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Logic"
+                          },
+                          "entity": {
+                              "value": "workflows"
+                          },
+                          "prefix": {
+                              "value": "logic-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "14c9edb5-4831-377b-36c2-bf7afe87c7db"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.ServiceBus"
+                          },
+                          "entity": {
+                              "value": "namespaces"
+                          },
+                          "prefix": {
+                              "value": "sb-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "e04125c3-d5f6-7f18-3cc3-0c14b318c69f"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.ServiceBus"
+                          },
+                          "entity": {
+                              "value": "namespaces/queues"
+                          },
+                          "prefix": {
+                              "value": "sbq-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "1293bc68-c56b-7c74-ae72-261cf9abb5f7"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.ServiceBus"
+                          },
+                          "entity": {
+                              "value": "namespaces/topics"
+                          },
+                          "prefix": {
+                              "value": "sbt-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "b64a164b-865d-c9ea-bec3-2764af478a63"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Automation"
+                          },
+                          "entity": {
+                              "value": "automationAccounts"
+                          },
+                          "prefix": {
+                              "value": "aa-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "647f8acd-fce8-3076-333b-b1de6d5c5060"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Insights"
+                          },
+                          "entity": {
+                              "value": "components"
+                          },
+                          "prefix": {
+                              "value": "appi-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "4f58cf2a-9085-1ba7-4982-fdd805fdc842"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Insights"
+                          },
+                          "entity": {
+                              "value": "actionGroups"
+                          },
+                          "prefix": {
+                              "value": "ag-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "c3355a9b-c3c9-d3fe-16f5-a71ad3d021cf"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Purview"
+                          },
+                          "entity": {
+                              "value": "accounts"
+                          },
+                          "prefix": {
+                              "value": "pview-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "6857097f-4d1f-4d57-a4f7-5d560577f7ea"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Blueprint"
+                          },
+                          "entity": {
+                              "value": "blueprints"
+                          },
+                          "prefix": {
+                              "value": "bp-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "21ba51ee-d9cd-4d09-2435-a6a5d7af34f3"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Blueprint"
+                          },
+                          "entity": {
+                              "value": "blueprints/artifacts"
+                          },
+                          "prefix": {
+                              "value": "bpa-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "771f7243-f08b-26c5-3773-72b2c6ab6c0a"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.KeyVault"
+                          },
+                          "entity": {
+                              "value": "vaults"
+                          },
+                          "prefix": {
+                              "value": "kv-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "9eda8521-00b0-aab5-36a0-8f3026a6fdcc"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.OperationalInsights"
+                          },
+                          "entity": {
+                              "value": "workspaces"
+                          },
+                          "prefix": {
+                              "value": "log-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "e27d6dea-025b-a183-0b1e-ae3d1c8196e5"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.Migrate"
+                          },
+                          "entity": {
+                              "value": "assessmentProjects"
+                          },
+                          "prefix": {
+                              "value": "migr-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "f8fb3584-91a4-c2ff-2632-32930f2aed3c"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.DataMigration"
+                          },
+                          "entity": {
+                              "value": "services"
+                          },
+                          "prefix": {
+                              "value": "dms-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "9699baa2-12a1-7c92-ee5f-ff675eed3123"
+                  },
+                  {
+                      "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policyDefinitions/policy-start-with-naming')]",
+                      "parameters": {
+                          "providerNamespace": {
+                              "value": "Microsoft.RecoveryServices"
+                          },
+                          "entity": {
+                              "value": "vaults"
+                          },
+                          "prefix": {
+                              "value": "rsv-"
+                          },
+                          "effect": {
+                              "value": "audit"
+                          }
+                      },
+                      "policyDefinitionReferenceId": "96096cfd-2516-bd84-a44e-827e424ff5d7"
+                  }
+              ]
+          }
+      },
+      {
+          "type": "Microsoft.Authorization/policyAssignments",
+          "apiVersion": "2021-06-01",
+          "name": "assignment-policy-resource-naming-initiative",
+          "dependsOn": [
+              "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policySetDefinitions/policy-resource-naming-initiative')]"
+          ],
+          "properties": {
+              "displayName": "Resource should be named correctly",
+              "policyDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/policySetDefinitions/policy-resource-naming-initiative')]",
+              "description": "This policy assignment was automatically created by oh-my-azure-playground",
+              "enforcementMode": "DoNotEnforce"
+          }
+      }
+  ]
+}
